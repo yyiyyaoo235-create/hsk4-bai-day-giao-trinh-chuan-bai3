@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK4 · Bài 3 — 经理对我印象不错 · Khởi động</title>
+<script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3/dist/hanzi-writer.min.js"></script>
+<script>
+/* ============ CUSTOM AUDIO PLAYER ============ */
+function formatTime(sec){
+  if(!isFinite(sec) || sec < 0) sec = 0;
+  var m = Math.floor(sec / 60);
+  var s = Math.floor(sec % 60);
+  return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}
+function updateRangeFill(range){
+  var min = parseFloat(range.min) || 0, max = parseFloat(range.max) || 0, val = parseFloat(range.value) || 0;
+  var pct = max > min ? ((val - min) / (max - min)) * 100 : 0;
+  range.style.background = 'linear-gradient(to right, var(--c-text) ' + pct + '%, var(--c-text-line) ' + pct + '%)';
+}
+function toggleAudio(id){
+  var audio = document.getElementById(id);
+  if(!audio) return;
+  if(audio.paused){
+    document.querySelectorAll('.audio-player-custom audio').forEach(function(a){
+      if(a.id !== id && !a.paused) a.pause();
+    });
+    audio.play();
+  } else {
+    audio.pause();
+  }
+}
+function onAudioLoaded(id){
+  var audio = document.getElementById(id);
+  var range = document.getElementById(id + '-range');
+  var timeEl = document.getElementById(id + '-time');
+  if(range){ range.max = audio.duration || 0; updateRangeFill(range); }
+  if(timeEl){ timeEl.textContent = formatTime(0) + ' / ' + formatTime(audio.duration); }
+}
+function onAudioTimeUpdate(id){
+  var audio = document.getElementById(id);
+  var range = document.getElementById(id + '-range');
+  var timeEl = document.getElementById(id + '-time');
+  if(range){ range.value = audio.currentTime; updateRangeFill(range); }
+  if(timeEl){ timeEl.textContent = formatTime(audio.currentTime) + ' / ' + formatTime(audio.duration); }
+}
+function onRangeInput(id){
+  var audio = document.getElementById(id);
+  var range = document.getElementById(id + '-range');
+  audio.currentTime = parseFloat(range.value);
+  updateRangeFill(range);
+}
+function onAudioEnded(id){
+  var btn = document.getElementById(id + '-btn');
+  if(btn){ btn.querySelector('.apc-icon-play').style.display = ''; btn.querySelector('.apc-icon-pause').style.display = 'none'; }
+}
+function handleAudioError(id){
+  var btn = document.getElementById(id + '-btn');
+  var range = document.getElementById(id + '-range');
+  var timeEl = document.getElementById(id + '-time');
+  var tag = document.getElementById(id + '-tag');
+  if(btn) btn.style.display = 'none';
+  if(range) range.style.display = 'none';
+  if(timeEl) timeEl.style.display = 'none';
+  if(tag) tag.style.display = 'inline-block';
+}
+document.addEventListener('play', function(e){
+  if(e.target.tagName === 'AUDIO'){
+    var btn = document.getElementById(e.target.id + '-btn');
+    if(btn){ btn.querySelector('.apc-icon-play').style.display = 'none'; btn.querySelector('.apc-icon-pause').style.display = ''; }
+  }
+}, true);
+document.addEventListener('pause', function(e){
+  if(e.target.tagName === 'AUDIO'){
+    var btn = document.getElementById(e.target.id + '-btn');
+    if(btn){ btn.querySelector('.apc-icon-play').style.display = ''; btn.querySelector('.apc-icon-pause').style.display = 'none'; }
+  }
+}, true);
+</script>
+<style>
+:root{
+  --bg-app: #FFF8F6;
+  --bg-app-2: #FCEDEB;
+  --ink: #402530;
+  --ink-soft: #8C6B72;
+  --card-bg: #FFFFFF;
+  --card-line: #F3DEE0;
+  --shadow: rgba(178, 58, 72, 0.10);
+  --shadow-strong: rgba(178, 58, 72, 0.18);
+
+  --c-cover-1:#FFEADD; --c-cover-2:#FFCBDA;
+
+  --c-warmup:#C6672A;      --c-warmup-bg:#FBE8D6;      --c-warmup-line:#EFC090;
+  --c-text:#B23A48;        --c-text-bg:#FBE3E5;        --c-text-line:#EFB4BA;
+  --c-vocab:#B2842A;       --c-vocab-bg:#FBF0D6;       --c-vocab-line:#E8CC8C;
+  --c-phonetic:#8B5FA3;    --c-phonetic-bg:#F1E6F4;    --c-phonetic-line:#D6BEDD;
+  --c-hanzi:#D63B62;       --c-hanzi-bg:#FCE3EA;       --c-hanzi-line:#F3B4C4;
+  --c-practice:#4E8C6E;    --c-practice-bg:#E4F1E9;    --c-practice-line:#A9D3BB;
+  --c-culture:#A6294F;     --c-culture-bg:#FBE2E9;     --c-culture-line:#EBACBF;
+  --c-highlight:#0E8F82;   --c-highlight-bg:#DCF2EF;   --c-highlight-line:#8CD3C9;
+  --c-summary:#7A3D64;     --c-summary-bg:#F1E4EC;     --c-summary-line:#D9B8CE;
+
+  --bk1:#FF7A45; --bk1-bg:#FFE8DC; --bk1-line:#FFC299;
+  --bk2:#FF4081; --bk2-bg:#FFE0EC; --bk2-line:#FFAFC8;
+  --bk3:#8B5CF6; --bk3-bg:#EDE4FE; --bk3-line:#C9B3FA;
+  --bk4:#12B76A; --bk4-bg:#D8F5E6; --bk4-line:#86E3B8;
+  --bk5:#0EA5E9; --bk5-bg:#DCF1FB; --bk5-line:#92D9F5;
+
+  --font-zh: "KaiTi","Kaiti SC","STKaiti","AR PL KaitiM GB","Kaiti",serif;
+  --font-latin: "Times New Roman", Times, serif;
+
+  --sidebar-w: 288px;
+  --sidebar-w-collapsed: 68px;
+  --topbar-h: 62px;
+}
+
+*{ box-sizing:border-box; }
+html{ font-size:18px; }
+body{
+  margin:0; background:var(--bg-app); color:var(--ink);
+  font-family:var(--font-latin);
+}
+h1,h2,h3,h4,p,ul,ol,dl,dd,dt,summary{ font-family:var(--font-latin); }
+.zh, .zh *{ font-family:var(--font-zh); }
+
+/* ===== SIDEBAR ===== */
+.sidebar{
+  position:fixed; top:0; left:0; bottom:0; width:var(--sidebar-w);
+  background:var(--card-bg); border-right:1px solid var(--card-line);
+  overflow-y:auto; overflow-x:hidden; z-index:50; transition:width .28s ease;
+}
+body.sidebar-collapsed .sidebar{ width:var(--sidebar-w-collapsed); }
+.sidebar-head{ padding:20px 18px 14px; border-bottom:1px solid var(--card-line); }
+.brand{ font-weight:700; font-size:1.05rem; color:var(--ink); white-space:nowrap; overflow:hidden; }
+.sub{ font-size:0.8rem; color:var(--ink-soft); margin-top:4px; white-space:nowrap; overflow:hidden; }
+body.sidebar-collapsed .sub, body.sidebar-collapsed .brand{ opacity:0; }
+
+.nav-single{ border-bottom:1px solid var(--card-line); }
+.nav-group summary, .nav-single > button{
+  display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+  padding:13px 18px; background:none; border:none; cursor:pointer;
+  font-size:0.95rem; font-weight:700; color:var(--ink); list-style:none;
+}
+.nav-group summary::-webkit-details-marker{ display:none; }
+.nav-group summary .chev{ margin-left:auto; font-size:0.75rem; color:var(--ink-soft); transition:transform .2s; }
+.nav-group[open] summary .chev{ transform:rotate(90deg); }
+.nav-group{ border-bottom:1px solid var(--card-line); }
+.nav-item{
+  display:block; width:100%; text-align:left; background:none; border:none;
+  padding:9px 18px 9px 42px; font-size:0.88rem; color:var(--ink-soft); cursor:pointer;
+  border-left:3px solid transparent;
+}
+.nav-item:hover, .nav-single>button:hover{ background:var(--bg-app-2); }
+.nav-item.active, .nav-single > button.active{
+  background:var(--c-summary-bg); color:var(--c-summary); font-weight:700; border-left-color:var(--c-summary);
+}
+body.sidebar-collapsed .nav-group summary, body.sidebar-collapsed .nav-single>button{
+  justify-content:center; padding:13px 0;
+}
+body.sidebar-collapsed .nav-group summary .label,
+body.sidebar-collapsed .nav-group summary .chev,
+body.sidebar-collapsed .nav-single > button .label,
+body.sidebar-collapsed .nav-item{ display:none; }
+
+.sidebar-toggle-row{ border-bottom:1px solid var(--card-line); }
+.sidebar-toggle-row > button{
+  display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+  padding:11px 18px; background:none; border:none; cursor:pointer;
+  font-size:0.85rem; font-weight:700; color:var(--ink-soft);
+}
+.sidebar-toggle-row > button:hover{ background:var(--bg-app-2); color:var(--ink); }
+body.sidebar-collapsed .sidebar-toggle-row > button{ justify-content:center; padding:11px 0; }
+body.sidebar-collapsed .sidebar-toggle-row .label{ display:none; }
+
+.sidebar-backdrop{ display:none; }
+
+/* ===== CONTENT COL ===== */
+.content-col{
+  margin-left:var(--sidebar-w); min-height:100vh; display:flex; flex-direction:column;
+  transition:margin-left .28s ease;
+}
+body.sidebar-collapsed .content-col{ margin-left:var(--sidebar-w-collapsed); }
+
+.topbar{
+  background:rgba(255,248,246,0.92); backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--card-line);
+  display:none; align-items:center; justify-content:space-between;
+  padding:0 22px; height:var(--topbar-h);
+  position:fixed; top:0; left:var(--sidebar-w); right:0; z-index:30;
+  transition:left .28s ease;
+}
+/* Header chỉ hiển thị ở trang bìa (cố định trên cùng); các trang sau ẩn header hoàn toàn */
+body.on-cover .topbar{ display:flex; }
+body.sidebar-collapsed .topbar{ left:var(--sidebar-w-collapsed); }
+.main{ padding:26px 30px; flex:1 0 auto; }
+body.on-cover .main{ padding-top:calc(26px + var(--topbar-h)); }
+.topbar-left{ display:flex; align-items:center; gap:12px; }
+.sidebar-toggle{ background:none; border:1px solid var(--card-line); border-radius:10px; width:38px; height:38px; font-size:1.1rem; cursor:pointer; color:var(--ink); }
+.topbar-title{ font-weight:700; font-size:0.95rem; color:var(--ink); }
+.topbar-right{ display:flex; align-items:center; gap:10px; }
+.slide-counter{ font-size:0.82rem; color:var(--ink-soft); }
+
+.site-footer{
+  background:var(--bg-app);
+  color:var(--ink-soft); display:flex; align-items:center; justify-content:center;
+  font-size:0.8rem; padding:12px 0; flex:0 0 auto; text-align:center;
+}
+
+.slide{ display:none; }
+.slide.active{ display:block; animation:fadeIn .35s ease; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+.slide-card{
+  background:var(--card-bg); border:1px solid var(--card-line); border-radius:26px;
+  box-shadow:0 10px 28px var(--shadow); padding:34px 40px; min-height:60vh;
+}
+
+.eyebrow{ display:flex; width:max-content; align-items:center; gap:8px; font-size:0.85rem; font-weight:700; letter-spacing:.02em; padding:5px 14px; border-radius:999px; margin:0 auto 14px; }
+.eyebrow.warmup{ color:var(--c-warmup); background:var(--c-warmup-bg); border:1px solid var(--c-warmup-line); }
+.eyebrow.text{ color:var(--c-text); background:var(--c-text-bg); border:1px solid var(--c-text-line); }
+
+.slide h2{ font-size:2rem; margin:0 0 6px; color:var(--ink); text-align:center; }
+.slide .subtitle{ font-size:1.1rem; color:var(--ink-soft); margin:0 0 20px; text-align:center; }
+
+/* ===== COVER ===== */
+.cover-slide .slide-card{
+  background:linear-gradient(135deg, var(--c-cover-1), var(--c-cover-2));
+  color:var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:70vh;
+  padding:60px 60px; text-align:center;
+}
+.cover-badge{ background:rgba(43,36,64,0.08); border:1px solid rgba(43,36,64,0.14); border-radius:999px; padding:6px 16px; font-size:0.85rem; font-weight:700; margin-bottom:22px; }
+.cover-slide h1.zh{
+  font-size:4.2rem; margin:0 0 6px; line-height:1.1;
+  color:#D6336C;
+  text-shadow:0 3px 10px rgba(214,51,108,0.18);
+}
+.cover-slide .cover-vi{
+  font-size:2rem; margin:0 0 18px; letter-spacing:.01em; font-weight:700;
+  color:#D6336C;
+  text-shadow:0 2px 8px rgba(214,51,108,0.15);
+}
+.cover-note{ font-size:0.92rem; max-width:560px; opacity:0.85; line-height:1.7; margin:0 auto; padding:12px 18px; border:1.5px dashed rgba(43,36,64,0.25); border-radius:14px; background:rgba(255,255,255,0.4); }
+.cover-image-ph{
+  width:100%; max-width:960px; aspect-ratio:16/9; margin-top:16px;
+  border-radius:18px; border:1.5px dashed rgba(43,36,64,0.28);
+  background:rgba(255,255,255,0.35);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+  color:var(--ink); text-align:center; padding:16px;
+}
+.cover-image-ph .ph-icon{ font-size:2rem; }
+.cover-image-ph .ph-hint{ font-size:0.85rem; font-weight:700; opacity:0.75; max-width:80%; }
+.cover-image{ width:100%; max-width:960px; border-radius:18px; margin-top:10px; display:block; object-fit:cover; }
+
+/* ===== SURVEY TABLE (khoi dong 2) ===== */
+.survey-table{ width:100%; border-collapse:collapse; font-size:0.95rem; margin-top:14px; }
+.survey-table th{ background:var(--c-warmup-bg); color:var(--c-warmup); padding:14px 12px; border:1px solid var(--c-warmup-line); }
+.survey-table td{ padding:20px 14px; border:1px solid var(--card-line); text-align:left; }
+.survey-table .zh{ font-size:1.5rem; }
+
+.student-select-bar{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:16px; }
+.ssb-label{ font-size:0.9rem; font-weight:700; color:var(--ink-soft); }
+.student-btn{
+  border:2px solid var(--sc); color:var(--sc); background:#fff; border-radius:999px;
+  padding:7px 18px; font-weight:700; font-size:0.88rem; cursor:pointer; transition:background .15s, color .15s;
+}
+.student-btn:hover{ background:color-mix(in srgb, var(--sc) 12%, #fff); }
+.student-btn.active{ background:var(--sc); color:#fff; box-shadow:0 3px 8px var(--shadow); }
+
+.survey-cell{
+  display:flex; align-items:center; gap:10px; cursor:pointer;
+  padding:6px 4px; border-radius:10px; min-height:34px;
+}
+.survey-cell:hover{ background:var(--bg-app-2); }
+.survey-dots{ display:inline-flex; gap:4px; flex:0 0 auto; min-width:22px; }
+.survey-dot{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:20px; height:20px; border-radius:50%; color:#fff; font-size:0.72rem; font-weight:700;
+  box-shadow:0 2px 5px rgba(0,0,0,0.18); animation:dotPop .18s ease;
+}
+@keyframes dotPop{ from{ transform:scale(0.4); opacity:0; } to{ transform:scale(1); opacity:1; } }
+.dot-s1{ background:var(--c-hanzi); }
+.dot-s2{ background:var(--c-practice); }
+.dot-s3{ background:var(--c-phonetic); }
+.survey-label{ line-height:1.5; }
+
+/* ===== MATCH GAME ===== */
+.match-status{ display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; gap:10px; }
+.match-status-actions{ display:flex; align-items:center; gap:10px; }
+.progress-text{ font-weight:700; color:var(--c-warmup); }
+.btn-reset{ background:var(--c-warmup-bg); border:1px solid var(--c-warmup-line); color:var(--c-warmup); border-radius:10px; padding:7px 14px; cursor:pointer; font-weight:700; }
+.match-words-grid.hide-pinyin .pinyin{ display:none; }
+.match-wrap{ display:flex; flex-direction:column; gap:28px; }
+.match-images-grid{ display:grid; grid-template-columns:repeat(6,1fr); gap:12px; }
+.match-words-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.match-word{ padding:14px 12px; border-radius:16px; border:2px solid var(--card-line); background:var(--card-bg); cursor:pointer; text-align:center; }
+.match-word .zh{ font-size:1.55rem; display:block; }
+.match-word .pinyin{ font-style:italic; color:var(--ink-soft); font-size:1.05rem; display:block; margin-top:4px; }
+.match-word.selected{ border-color:var(--c-warmup); background:var(--c-warmup-bg); }
+
+.flashcard-wrap{ display:flex; flex-direction:column; align-items:center; gap:22px; }
+.flashcard-scene{ perspective:1800px; width:480px; max-width:92%; height:300px; }
+.flashcard{ position:relative; width:100%; height:100%; cursor:pointer; transform-style:preserve-3d; transition:transform .5s cubic-bezier(.4,.2,.2,1); }
+.flashcard.flipped{ transform:rotateY(180deg); }
+.fc-face{ position:absolute; inset:0; backface-visibility:hidden; border-radius:26px; display:flex; flex-direction:column; align-items:center; justify-content:center; border:1px solid var(--c-hanzi-line); box-shadow:0 8px 22px var(--shadow); }
+.fc-front{ background:var(--c-hanzi-bg); }
+.fc-back{ background:var(--c-summary-bg); transform:rotateY(180deg); }
+.fc-front .hanzi-big{ font-size:5.2rem; color:var(--c-hanzi); }
+.fc-back .pinyin-big{ font-size:1.7rem; font-style:italic; color:var(--c-summary); }
+.fc-back .pos-big{ font-size:0.9rem; color:var(--ink-soft); margin-top:4px; }
+.fc-back .meaning-big{ font-size:1.6rem; font-weight:700; margin-top:8px; color:var(--ink); text-align:center; padding:0 20px; }
+.fc-controls{ display:flex; gap:12px; }
+.fc-controls button{ background:var(--card-bg); border:1px solid var(--card-line); border-radius:12px; padding:10px 18px; cursor:pointer; font-size:0.95rem; color:var(--ink); }
+.fc-controls button:hover{ background:var(--bg-app-2); }
+.btn-shuffle{ background:var(--c-warmup-bg) !important; border-color:var(--c-warmup-line) !important; color:var(--c-warmup) !important; font-weight:700; }
+.fc-hint{ font-size:0.85rem; color:var(--ink-soft); }
+.match-word.matched{ border-color:#3CAE6E; background:#E9F9EF; color:#1F8A4C; cursor:default; }
+.match-word.wrong{ border-color:#E15656; background:#FDEAEA; animation:shake .35s; }
+.match-img{
+  width:90%; aspect-ratio:2/3; position:relative; margin:0 auto;
+  border-radius:14px; border:2px dashed var(--card-line); cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px;
+  background:var(--bg-app-2); padding:12px;
+}
+.match-img .img-letter{
+  position:absolute; top:10px; left:10px; width:26px; height:26px; border-radius:8px;
+  background:var(--ink); color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:0.85rem; z-index:2;
+}
+.match-img-photo{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; border-radius:12px; z-index:1; }
+.match-img .ph-icon{ font-size:1.9rem; }
+.match-img .ph-hint{ font-size:0.9rem; color:var(--ink-soft); font-weight:700; letter-spacing:.01em; text-align:center; line-height:1.4; }
+.match-img.selected{ border-color:var(--c-warmup); border-style:solid; background:var(--c-warmup-bg); }
+.match-img.matched{ border-color:#3CAE6E; border-style:solid; background:#E9F9EF; }
+.match-img.wrong{ border-color:#E15656; border-style:solid; animation:shake .35s; }
+@keyframes shake{ 0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);} }
+
+/* ===== TEACHER NOTE ===== */
+
+/* ===== VOCAB TABLE (Tong hop tu moi) ===== */
+table.vocab-table{ width:100%; border-collapse:collapse; font-size:0.95rem; }
+table.vocab-table th{ background:var(--c-vocab-bg); color:var(--c-vocab); text-align:left; padding:10px 12px; border-bottom:2px solid var(--c-vocab-line); }
+table.vocab-table td{ padding:10px 12px; border-bottom:1px solid var(--card-line); vertical-align:middle; }
+table.vocab-table tr:hover td{ background:var(--bg-app-2); cursor:pointer; }
+table.vocab-table .t-hanzi{ font-size:1.4rem; color:var(--ink); font-weight:700; }
+table.vocab-table .t-hanzi.bk1{ color:var(--bk1); }
+table.vocab-table .t-hanzi.bk2{ color:var(--bk2); }
+table.vocab-table .t-hanzi.bk3{ color:var(--bk3); }
+table.vocab-table .t-hanzi.bk4{ color:var(--bk4); }
+table.vocab-table .t-hanzi.bk5{ color:var(--bk5); }
+.bk-badge{ display:inline-block; padding:2px 10px; border-radius:999px; font-size:0.78rem; font-weight:700; border:1px solid transparent; }
+.bk-badge.bk1{ color:var(--bk1); background:var(--bk1-bg); border-color:var(--bk1-line); }
+.bk-badge.bk2{ color:var(--bk2); background:var(--bk2-bg); border-color:var(--bk2-line); }
+.bk-badge.bk3{ color:var(--bk3); background:var(--bk3-bg); border-color:var(--bk3-line); }
+.bk-badge.bk4{ color:var(--bk4); background:var(--bk4-bg); border-color:var(--bk4-line); }
+.bk-badge.bk5{ color:var(--bk5); background:var(--bk5-bg); border-color:var(--bk5-line); }
+
+/* ===== FLOATING BUTTONS ===== */
+.back-to-top-btn{
+  position:fixed; bottom:24px; left:32px; z-index:35; width:26px; height:26px; border-radius:50%;
+  border:1px solid var(--card-line); background:#fff; box-shadow:0 6px 18px var(--shadow);
+  display:flex; align-items:center; justify-content:center; color:var(--ink); cursor:pointer;
+  font-size:0.65rem; opacity:0; pointer-events:none; transform:translateY(10px);
+  transition:opacity .25s ease, transform .25s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.back-to-top-btn.show{ opacity:0.5; pointer-events:auto; transform:translateY(0); }
+.back-to-top-btn:hover{ opacity:1; background:var(--c-summary); color:#fff; border-color:var(--c-summary); }
+
+.image-guide-btn{
+  position:fixed; top:16px; right:20px; z-index:35;
+  width:38px; height:38px; border-radius:50%; border:1px solid var(--card-line);
+  background:var(--card-bg); color:var(--ink-soft); font-size:1rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0.38; box-shadow:0 4px 10px var(--shadow);
+  transition:opacity .2s ease, transform .2s ease, top .2s ease;
+}
+body.on-cover .image-guide-btn{ top:calc(var(--topbar-h) + 16px); }
+.image-guide-btn:hover{ opacity:1; transform:scale(1.08); }
+
+.fullscreen-btn{
+  position:fixed; top:16px; right:66px; z-index:35;
+  width:38px; height:38px; border-radius:50%; border:1px solid var(--card-line);
+  background:var(--card-bg); color:var(--ink-soft); font-size:1rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0.38; box-shadow:0 4px 10px var(--shadow);
+  transition:opacity .2s ease, transform .2s ease, top .2s ease;
+}
+body.on-cover .fullscreen-btn{ top:calc(var(--topbar-h) + 16px); }
+.fullscreen-btn:hover{ opacity:1; transform:scale(1.08); }
+.fullscreen-btn.is-full{ opacity:0.6; color:var(--c-summary); border-color:var(--c-summary-line); }
+
+/* ===== BAI KHOA: LAYOUT CHUNG + ANH MINH HOA ===== */
+.text-layout{ display:flex; gap:24px; align-items:flex-start; }
+.text-layout-main{ flex:1 1 0; min-width:0; }
+.text-illustration-col{ flex:0 0 320px; position:sticky; top:calc(var(--topbar-h) + 20px); }
+.cb-jump-btn{
+  position:absolute; top:-12px; right:-12px; width:36px; height:36px; border-radius:50%;
+  border:1.5px solid var(--c-text-line); background:#fff; color:var(--c-text);
+  font-size:1.05rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 4px 10px var(--shadow); z-index:5;
+}
+.cb-jump-btn:hover{ background:var(--c-text); color:#fff; }
+.text-illustration-ph{
+  width:100%; aspect-ratio:3/5; border-radius:18px; border:1.5px dashed var(--c-text-line);
+  background:var(--c-text-bg);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;
+  color:var(--c-text); text-align:center; padding:16px;
+}
+.text-illustration-ph .ph-icon{ font-size:1.8rem; }
+.text-illustration-ph .ph-hint{ font-size:0.78rem; font-weight:700; opacity:0.8; max-width:85%; line-height:1.5; }
+.text-illustration{
+  width:100%; aspect-ratio:3/5; border-radius:18px; display:block; object-fit:contain;
+  background:var(--c-text-bg);
+  box-shadow:0 8px 20px var(--shadow); border:1.5px solid var(--c-text-line);
+}
+@media (max-width:900px){
+  .text-layout{ flex-direction:column; }
+  .text-illustration-col{ position:relative; flex:0 0 auto; width:100%; max-width:260px; margin:0 auto; }
+}
+
+/* ===== FIT MODE (áp dụng mặc định, không cần bật toàn màn hình) =====
+   Khối "fit-screen" (tiêu đề + audio + bài khoá + ảnh minh hoạ) gói gọn đúng 1 màn hình,
+   không cần cuộn để đọc hết hội thoại. Các phần bên dưới (từ vựng, tên riêng, hỏi-đáp,
+   ghi chú GV...) nằm ngoài khối này nên vẫn cuộn trang xuống xem như bình thường. */
+body.has-fit-slide .content-col{ overflow-y:auto; }
+body.has-fit-slide .main{ padding:18px 30px; }
+body.has-fit-slide .slide-card{ padding:18px 34px; box-shadow:none; }
+
+body.has-fit-slide .fit-screen{
+  height:calc(100vh - var(--topbar-h) - 72px);
+  min-height:440px;
+  display:flex; flex-direction:column; min-height:0;
+}
+body.has-fit-slide .fit-screen > .eyebrow{ flex:0 0 auto; margin:0 auto 8px; }
+body.has-fit-slide .fit-screen > h2{ flex:0 0 auto; font-size:1.8rem; margin:0 0 4px; }
+body.has-fit-slide .fit-screen > .subtitle{ flex:0 0 auto; font-size:1.08rem; margin:0 0 14px; }
+body.has-fit-slide .fit-screen .audio-player-custom{ flex:0 0 auto; margin-bottom:12px; }
+body.has-fit-slide .fit-screen .text-layout{ flex:1 1 auto; min-height:0; }
+body.has-fit-slide .fit-screen .text-layout-main{ height:100%; display:flex; flex-direction:column; min-height:0; }
+body.has-fit-slide .fit-screen .dialogue-box{
+  flex:1 1 auto; min-height:0; overflow-y:auto; margin-bottom:0; padding:22px 30px;
+  justify-content:space-evenly; gap:18px;
+}
+body.has-fit-slide .fit-screen .chat-avatar{ width:46px; height:46px; font-size:1.08rem; }
+body.has-fit-slide .fit-screen .chat-bubble{ padding:16px 22px; }
+body.has-fit-slide .fit-screen .chat-speaker{ font-size:1.05rem; }
+body.has-fit-slide .fit-screen .chat-text{ font-size:1.62rem; line-height:1.75; }
+body.has-fit-slide .fit-screen .text-illustration-col{ height:100%; position:relative; flex:0 0 452px; }
+body.has-fit-slide .fit-screen .text-illustration-ph,
+body.has-fit-slide .fit-screen .text-illustration{ height:100%; width:100%; aspect-ratio:unset; object-fit:contain; }
+@media (max-width:1100px){
+  body.has-fit-slide .fit-screen .text-illustration-col{ flex-basis:372px; }
+}
+@media (max-width:900px){
+  body.has-fit-slide .fit-screen{ height:auto; min-height:0; display:block; }
+  body.has-fit-slide .fit-screen .text-layout{ flex:none; }
+  body.has-fit-slide .fit-screen .text-layout-main{ height:auto; display:block; }
+  body.has-fit-slide .fit-screen .dialogue-box{ flex:none; overflow-y:visible; max-height:none; }
+  body.has-fit-slide .fit-screen .text-illustration-col{ height:auto; position:relative; flex:0 0 auto; }
+  body.has-fit-slide .fit-screen .text-illustration-ph,
+  body.has-fit-slide .fit-screen .text-illustration{ height:auto; aspect-ratio:3/5; }
+}
+
+/* ===== DIALOGUE (khung chat xen kẽ giữa 2 nhân vật) ===== */
+.dialogue-box{
+  background:linear-gradient(180deg, #FFFFFF 0%, var(--c-text-bg) 340%);
+  border:1.5px solid var(--c-text-line);
+  border-radius:18px; padding:26px 28px; margin-bottom:22px;
+  box-shadow:0 8px 20px var(--shadow); position:relative;
+  display:flex; flex-direction:column; gap:18px;
+}
+.chat-row{ display:flex; align-items:flex-end; gap:10px; width:100%; }
+.chat-row.spk-b{ flex-direction:row-reverse; }
+.chat-avatar{
+  flex:0 0 auto; width:42px; height:42px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:1.02rem; color:#fff; box-shadow:0 3px 8px var(--shadow);
+  position:relative; overflow:hidden;
+}
+.chat-avatar-fallback{ display:block; }
+.chat-avatar-img{ display:none; width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.chat-row.spk-a .chat-avatar{ background:var(--c-text); }
+.chat-row.spk-b .chat-avatar{ background:var(--c-phonetic); }
+.chat-bubble{
+  max-width:82%; border-radius:20px 20px 20px 6px; padding:14px 20px;
+  box-shadow:0 4px 10px var(--shadow);
+}
+.chat-row.spk-a .chat-bubble{ background:var(--c-text-bg); border:1.5px solid var(--c-text-line); }
+.chat-row.spk-b .chat-bubble{ background:var(--c-phonetic-bg); border:1.5px solid var(--c-phonetic-line); border-radius:20px 20px 6px 20px; margin-left:auto; }
+.chat-speaker{ display:block; font-weight:700; font-size:1.02rem; margin-bottom:4px; }
+.chat-row.spk-a .chat-speaker{ color:var(--c-text); }
+.chat-row.spk-b .chat-speaker{ color:var(--c-phonetic); }
+.chat-text{ font-size:1.5rem; line-height:1.7; color:var(--ink); }
+.para-box{
+  background:linear-gradient(180deg, #FFFFFF 0%, var(--c-text-bg) 340%);
+  border:1.5px solid var(--c-text-line); border-left:6px solid var(--c-text);
+  border-radius:18px; padding:30px 32px 26px; font-size:1.51rem; line-height:2.05;
+  margin-bottom:22px; box-shadow:0 8px 20px var(--shadow); position:relative;
+}
+.audio-tag{ display:inline-block; font-size:0.78rem; color:var(--ink-soft); background:var(--bg-app-2); border:1px solid var(--card-line); border-radius:999px; padding:2px 10px; margin-bottom:12px; }
+
+/* ===== CUSTOM AUDIO PLAYER (nut phat/dung + thanh tua) ===== */
+.audio-player-custom{
+  display:flex; align-items:center; gap:12px;
+  background:var(--c-text-bg); border:1.5px solid var(--c-text-line);
+  border-radius:999px; padding:7px 18px 7px 7px; margin-bottom:14px;
+  max-width:440px; box-shadow:0 4px 10px var(--shadow);
+}
+.audio-player-custom audio{ display:none; }
+.apc-btn{
+  flex:0 0 auto; width:38px; height:38px; border-radius:50%; border:none;
+  background:var(--c-text); color:#fff; cursor:pointer; font-size:0.95rem;
+  display:flex; align-items:center; justify-content:center; padding:0;
+  box-shadow:0 3px 8px var(--shadow);
+}
+.apc-btn:hover{ opacity:0.88; }
+.apc-icon-play{ margin-left:2px; }
+.apc-range{
+  flex:1 1 auto; -webkit-appearance:none; appearance:none; height:6px; border-radius:999px;
+  background:linear-gradient(to right, var(--c-text) 0%, var(--c-text-line) 0%);
+  cursor:pointer; outline:none;
+}
+.apc-range::-webkit-slider-runnable-track{ height:6px; border-radius:999px; background:transparent; }
+.apc-range::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:15px; height:15px; border-radius:50%;
+  background:var(--c-text); border:2px solid #fff; box-shadow:0 1px 4px rgba(0,0,0,0.3); margin-top:-4.5px;
+}
+.apc-range::-moz-range-track{ height:6px; border-radius:999px; background:transparent; }
+.apc-range::-moz-range-thumb{
+  width:15px; height:15px; border-radius:50%; background:var(--c-text); border:2px solid #fff;
+  box-shadow:0 1px 4px rgba(0,0,0,0.3); cursor:pointer;
+}
+.apc-time{ flex:0 0 auto; font-size:0.78rem; color:var(--ink-soft); white-space:nowrap; font-variant-numeric:tabular-nums; }
+
+.vocab-link{
+  font-weight:700; color:var(--c-highlight); cursor:pointer; background:var(--c-highlight-bg);
+  padding:1px 7px; border-radius:7px; border-bottom:2px solid var(--c-highlight);
+  white-space:nowrap;
+}
+.vocab-link:hover{ background:var(--c-highlight-line); }
+
+/* ===== MODAL TU VUNG (bam vao vocab-link) ===== */
+.modal-body{ margin-top:4px; }
+.modal-top-row{
+  display:flex; gap:24px; align-items:flex-start; justify-content:center; flex-wrap:wrap;
+  padding-bottom:20px; margin-bottom:20px; border-bottom:1px solid var(--card-line);
+}
+.modal-top-row .modal-head-block{ flex:0 0 200px; }
+.modal-head-block{ text-align:center; }
+.hw-toggle-btn{
+  display:inline-flex; align-items:center; gap:6px; margin-top:4px;
+  font-size:0.82rem; font-weight:700; padding:7px 14px; border-radius:999px;
+  border:1px solid var(--c-hanzi-line); background:var(--c-hanzi-bg); color:var(--c-hanzi);
+  cursor:pointer;
+}
+.hw-toggle-btn:hover{ background:var(--c-hanzi-line); }
+.usage-toggle-btn{ border-color:var(--c-warmup-line); background:var(--c-warmup-bg); color:var(--c-warmup); margin-top:0; }
+.usage-toggle-btn:hover{ background:var(--c-warmup-line); }
+.modal-usage-content{ display:none; margin-top:12px; }
+.modal-usage-content.show{ display:block; }
+.modal-example-title{ display:none; }
+.modal-example-title.show{ display:block; }
+.modal-word-head{ display:flex; align-items:baseline; justify-content:center; gap:16px; margin-bottom:6px; }
+.modal-word-head .mw-hanzi{ font-size:3rem; color:var(--c-hanzi); }
+.modal-word-head .mw-pinyin{ font-size:1.3rem; font-style:italic; color:var(--ink-soft); }
+.modal-pos{ display:inline-block; font-size:0.78rem; font-weight:700; color:var(--c-vocab); background:var(--c-vocab-bg); border-radius:999px; padding:2px 10px; margin-bottom:10px; }
+.modal-meaning{ font-size:1.15rem; margin-bottom:18px; text-align:center; }
+.modal-example{ display:flex; flex-direction:column; gap:14px; }
+.modal-example-item{ display:flex; gap:10px; background:var(--c-text-bg); border:1px solid var(--c-text-line); border-radius:14px; padding:14px 18px; }
+.modal-example-item .ex-num{ flex:0 0 auto; width:22px; height:22px; border-radius:50%; background:var(--c-text); color:#fff; font-size:0.8rem; font-weight:700; display:flex; align-items:center; justify-content:center; margin-top:3px; }
+.modal-example-item .zh{ font-size:1.48rem; line-height:1.7; display:block; }
+.modal-example-item .ex-vi{ font-size:0.92rem; color:var(--ink-soft); margin-top:4px; font-style:italic; }
+.modal-example .hl{ color:var(--c-hanzi); font-weight:700; border-bottom:2px solid var(--c-hanzi); }
+.modal-usage{ display:flex; flex-direction:column; gap:10px; }
+.modal-usage-item{ background:var(--c-warmup-bg); border:1px solid var(--c-warmup-line); border-radius:14px; padding:12px 16px; }
+.modal-usage-item .usage-pattern{ font-weight:700; color:var(--c-warmup); font-size:1.25rem; margin-bottom:5px; line-height:1.6; }
+.modal-usage-item .usage-note{ font-size:1.08rem; color:var(--ink); line-height:1.6; }
+.modal-usage-item .usage-note ul{ margin:0; padding-left:1.2em; }
+.modal-usage-item .usage-note li{ margin-bottom:4px; }
+.modal-usage-item .usage-note li:last-child{ margin-bottom:0; }
+.vocab-illustration-wrap{ margin-top:8px; }
+.vocab-illustration{
+  display:block; width:100%; max-width:320px; aspect-ratio:1/1; object-fit:cover;
+  border-radius:16px; border:1px solid var(--card-line); box-shadow:0 6px 16px var(--shadow);
+  margin:0 auto; background:var(--bg-app-2);
+}
+.hw-row{ display:none; flex-direction:row; flex-wrap:wrap; align-items:flex-start; justify-content:center; gap:18px; margin-top:14px; width:100%; }
+.hw-row.show{ display:flex; }
+.hw-block{ background:var(--bg-app-2); border:1px solid var(--card-line); border-radius:16px; padding:14px; display:flex; flex-direction:column; align-items:center; gap:8px; width:220px; }
+.writer-canvas{ width:180px; height:180px; background:#fff; border-radius:12px; border:1px solid var(--card-line); }
+.hw-btns{ display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+.hw-btns button{ font-size:0.78rem; padding:6px 10px; border-radius:8px; border:1px solid var(--card-line); background:var(--card-bg); cursor:pointer; }
+.hw-btns button:hover{ background:var(--bg-app-2); }
+.hw-speed{ width:100%; }
+.quiz-feedback{ font-size:0.8rem; color:var(--ink-soft); text-align:center; min-height:1.2em; }
+
+/* ===== HOP CAU HOI HIEU BAI + THUAT LAI ===== */
+.comprehension-box{
+  display:none; flex-direction:column; position:absolute; inset:0; z-index:15;
+  border-radius:16px; padding:20px 24px; background:var(--card-bg);
+  border:1.5px solid var(--c-text-line); box-shadow:0 14px 34px var(--shadow-strong);
+  overflow-y:auto;
+}
+.comprehension-box.open{ display:flex; }
+.comprehension-box .cb-title{ font-weight:700; color:var(--c-text); font-size:1.05rem; padding-right:34px; margin-bottom:14px; }
+.cb-close-btn{
+  position:absolute; top:14px; right:14px; width:30px; height:30px; border-radius:50%;
+  border:1px solid var(--c-text-line); background:#fff; color:var(--c-text);
+  font-size:0.95rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.cb-close-btn:hover{ background:var(--c-text); color:#fff; }
+.cb-body{ display:block; }
+.qa-item{ background:var(--c-text-bg); border:1px solid var(--c-text-line); border-radius:10px; padding:10px 16px; margin-bottom:8px; }
+.qa-item:last-child{ margin-bottom:0; }
+.qa-item summary{ cursor:pointer; font-weight:600; color:var(--ink); list-style:none; }
+.qa-item summary .zh{ font-size:1.3rem; }
+.qa-item summary::-webkit-details-marker{ display:none; }
+.qa-item summary::before{ content:"▸ "; color:var(--c-text); font-weight:700; }
+.qa-item[open] summary::before{ content:"▾ "; }
+.qa-item .qa-answer{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--c-text-line); font-size:0.92rem; color:var(--ink-soft); line-height:1.7; }
+.qa-item .qa-answer .qa-tag{ font-weight:700; color:var(--c-text); }
+.cb-subtitle{ font-weight:700; color:var(--c-highlight); font-size:0.95rem; margin:16px 0 10px; padding-top:14px; border-top:1px dashed var(--c-text-line); }
+.retell-box{ background:var(--c-highlight-bg); border:1px solid var(--c-highlight-line); border-radius:10px; padding:12px 16px; }
+.retell-hint{ font-weight:700; color:var(--c-highlight); font-size:0.85rem; margin-bottom:6px; }
+.retell-text{ font-size:1.15rem; line-height:1.85; color:var(--ink); }
+
+/* ===== MODAL: HUONG DAN CHEN ANH ===== */
+.modal-overlay{ display:none; position:fixed; inset:0; background:rgba(30,20,8,0.45); z-index:300; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.show{ display:flex; }
+.modal-box{ background:var(--card-bg); border-radius:22px; max-width:860px; width:100%; max-height:88vh; overflow-y:auto; padding:30px 32px; box-shadow:0 18px 44px var(--shadow-strong); position:relative; }
+.modal-close{ position:absolute; top:16px; right:18px; background:none; border:none; font-size:1.3rem; cursor:pointer; color:var(--ink-soft); }
+.modal-box h3{ margin:0 0 6px; }
+.modal-section-title{ font-weight:700; color:var(--ink-soft); font-size:0.82rem; letter-spacing:.03em; text-transform:uppercase; margin:18px 0 8px; }
+.img-guide-path{ font-size:0.85rem; color:var(--ink-soft); margin-bottom:12px; line-height:1.6; }
+.img-guide-path code{ background:var(--bg-app-2); padding:2px 8px; border-radius:6px; }
+.guide-table{ width:100%; border-collapse:collapse; font-size:0.9rem; margin-top:10px; table-layout:fixed; }
+.guide-table th, .guide-table td{ border:1px solid var(--card-line); padding:8px 10px; text-align:left; vertical-align:top; font-size:0.85rem; }
+.guide-table th{ background:var(--bg-app-2); }
+.guide-table th:nth-child(1), .guide-table td:nth-child(1){ width:20%; }
+.guide-table th:nth-child(2), .guide-table td:nth-child(2){ width:16%; }
+.guide-table td.fname code{ background:var(--bg-app-2); padding:2px 6px; border-radius:6px; font-size:0.8rem; word-break:break-all; }
+@media (max-width:900px){
+  .modal-box{ padding:22px 18px; }
+  .guide-table{ table-layout:auto; }
+}
+
+@media (max-width: 900px){
+  .content-col, body.sidebar-collapsed .content-col{ margin-left:0 !important; }
+  .sidebar{ width:var(--sidebar-w) !important; transform:translateX(-100%); transition:transform .28s ease; z-index:200; box-shadow:14px 0 34px rgba(0,0,0,0.22); }
+  body.sidebar-collapsed .sidebar{ transform:translateX(0); }
+  body.sidebar-collapsed .nav-group summary, body.sidebar-collapsed .nav-single > button{
+    justify-content:flex-start !important; text-align:left !important; padding:13px 18px !important;
+  }
+  body.sidebar-collapsed .nav-group summary .label, body.sidebar-collapsed .nav-group summary .chev,
+  body.sidebar-collapsed .nav-single > button .label, body.sidebar-collapsed .nav-item{ display:block !important; }
+  .sidebar-backdrop{ display:none; }
+  body.sidebar-collapsed .sidebar-backdrop{ display:block; position:fixed; inset:0; background:rgba(20,14,4,0.45); z-index:150; }
+  .topbar{ padding:0 12px; gap:6px; }
+  .topbar-title{ font-size:0.82rem; }
+  .main{ padding:18px 16px; }
+  body.on-cover .main{ padding-top:calc(18px + var(--topbar-h)); }
+  .slide-card{ padding:26px 20px; min-height:auto; }
+  .back-to-top-btn{ width:23px; height:23px; font-size:0.55rem; left:20px; bottom:20px; }
+  .cover-slide h1.zh{ font-size:2.6rem; }
+  .cover-slide .cover-vi{ font-size:1.4rem; }
+  .match-images-grid{ grid-template-columns:repeat(3,1fr); }
+  .match-words-grid{ grid-template-columns:repeat(1,1fr); }
+}
+</style>
+</head>
+<body class="on-cover">
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-head">
+    <div class="brand">HSK4 (giáo trình cũ) · Bài 3</div>
+    <div class="sub"><span class="zh">经理对我印象不错</span> · Giám đốc có ấn tượng tốt về tôi</div>
+  </div>
+
+  <div class="sidebar-toggle-row">
+    <button onclick="toggleSidebar()" title="Đóng/mở danh mục"><span class="emoji">☰</span><span class="label">Thu gọn danh mục</span></button>
+  </div>
+
+  <div class="nav-single">
+    <button class="active" data-slide="0" onclick="goTo(0)"><span class="emoji">🎬</span><span class="label">Trang bìa</span></button>
+  </div>
+
+  <details class="nav-group" open>
+    <summary><span class="emoji">🔥</span><span class="label">Khởi động</span><span class="chev">❯</span></summary>
+    <button class="nav-item" data-slide="1" onclick="goTo(1)">1. Nối từ với hình</button>
+    <button class="nav-item" data-slide="2" onclick="goTo(2)">2. Công việc lý tưởng</button>
+  </details>
+
+  <details class="nav-group" open>
+    <summary><span class="emoji">📖</span><span class="label">Bài khoá</span><span class="chev">❯</span></summary>
+    <button class="nav-item" data-slide="3" onclick="goTo(3)"><span class="zh">课文1</span> · Chuyện của Tiểu Vũ</button>
+    <button class="nav-item" data-slide="4" onclick="goTo(4)"><span class="zh">课文2</span> · Chuyện của Tiểu Lâm</button>
+    <button class="nav-item" data-slide="5" onclick="goTo(5)"><span class="zh">课文3</span> · Chuyện của Vương Tịnh</button>
+    <button class="nav-item" data-slide="6" onclick="goTo(6)"><span class="zh">课文4</span> · Điều cần lưu ý khi phỏng vấn</button>
+    <button class="nav-item" data-slide="7" onclick="goTo(7)"><span class="zh">课文5</span> · Ấn tượng ban đầu</button>
+  </details>
+
+  <div class="nav-single">
+    <button data-slide="8" onclick="goTo(8)"><span class="emoji">📚</span><span class="label">Tổng hợp từ mới</span></button>
+  </div>
+  <div class="nav-single">
+    <button data-slide="9" onclick="goTo(9)"><span class="emoji">🃏</span><span class="label">Flashcard từ vựng</span></button>
+  </div>
+</div>
+
+<div class="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
+<div class="content-col" id="contentCol">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="sidebar-toggle" onclick="toggleSidebar()" title="Đóng/mở danh mục">☰</button>
+      <div class="topbar-title">HSK4 · Bài 3 — <span class="zh">经理对我印象不错</span></div>
+    </div>
+    <div class="topbar-right">
+      <span class="slide-counter" id="slideCounter">1 / 8</span>
+    </div>
+  </div>
+
+  <div class="main">
+    <div id="slidesContainer">
+
+      <!-- SLIDE 0: COVER -->
+      <div class="slide cover-slide active" id="slide-0">
+        <div class="slide-card">
+          <div class="cover-badge">HSK4 · Giáo trình chuẩn HSK (bản cũ) · Bài 3</div>
+          <h1 class="zh">经理对我印象不错</h1>
+          <div class="cover-vi">Giám đốc có ấn tượng tốt về tôi</div>
+          <div class="cover-image-ph" id="coverImagePh">
+            <span class="ph-icon">🖼️</span>
+            <span class="ph-hint">Ảnh ngang minh hoạ bài học (khuyến nghị tỉ lệ 16:9)</span>
+          </div>
+          <img class="cover-image" id="coverImage" src="bia.png" alt="Ảnh minh hoạ chủ đề bài học"
+               style="display:none;"
+               onload="document.getElementById('coverImagePh').style.display='none'; this.style.display='block';"
+               onerror="this.style.display='none';">
+        </div>
+      </div>
+
+      <!-- SLIDE 1: KHOI DONG 1 - NOI TU VOI HINH -->
+      <div class="slide" id="slide-1">
+        <div class="slide-card">
+          <span class="eyebrow warmup">🔥 <span class="zh">热身 1</span> · Khởi động</span>
+          <h2><span class="zh">给下面的词语选择对应的图片</span></h2>
+          <p class="subtitle">Chọn hình tương ứng với từ ngữ bên dưới.</p>
+
+          <div class="match-status">
+            <span class="progress-text" id="matchProgress">Đã ghép đúng: 0 / 6</span>
+            <div class="match-status-actions">
+              <button class="btn-reset" id="pinyinToggleBtn" onclick="togglePinyin()">🙈 Ẩn pinyin</button>
+              <button class="btn-reset" onclick="resetMatchGame()">↺ Làm lại</button>
+            </div>
+          </div>
+
+          <div class="match-wrap">
+            <div class="match-images-grid">
+              <div class="match-img" data-pair="3" onclick="selectImg(this)">
+                <img class="match-img-photo" src="anh-a.png" alt="律师" onerror="this.remove();">
+                <span class="img-letter">A</span><span class="ph-icon">🖼️</span><span class="ph-hint">Nữ luật sư cầm sách, mặc áo choàng</span>
+              </div>
+              <div class="match-img" data-pair="6" onclick="selectImg(this)">
+                <img class="match-img-photo" src="anh-b.png" alt="通知" onerror="this.remove();">
+                <span class="img-letter">B</span><span class="ph-icon">🖼️</span><span class="ph-hint">Dán thông báo/<span class="zh">招聘信息</span> lên bảng tin</span>
+              </div>
+              <div class="match-img" data-pair="5" onclick="selectImg(this)">
+                <img class="match-img-photo" src="anh-c.png" alt="应聘" onerror="this.remove();">
+                <span class="img-letter">C</span><span class="ph-icon">🖼️</span><span class="ph-hint">Đông người xếp hàng ở hội chợ việc làm</span>
+              </div>
+              <div class="match-img" data-pair="2" onclick="selectImg(this)">
+                <img class="match-img-photo" src="anh-d.png" alt="面试" onerror="this.remove();">
+                <span class="img-letter">D</span><span class="ph-icon">🖼️</span><span class="ph-hint">Nhà tuyển dụng trao đổi với ứng viên, cầm hồ sơ</span>
+              </div>
+              <div class="match-img" data-pair="4" onclick="selectImg(this)">
+                <img class="match-img-photo" src="anh-e.png" alt="笔试" onerror="this.remove();">
+                <span class="img-letter">E</span><span class="ph-icon">🖼️</span><span class="ph-hint">Nhiều người ngồi bàn làm bài viết</span>
+              </div>
+              <div class="match-img" data-pair="1" onclick="selectImg(this)">
+                <img class="match-img-photo" src="anh-f.png" alt="紧张" onerror="this.remove();">
+                <span class="img-letter">F</span><span class="ph-icon">🖼️</span><span class="ph-hint">Người đàn ông lấy tay che miệng, vẻ lo lắng</span>
+              </div>
+            </div>
+            <div class="match-words-grid">
+              <button class="match-word" data-pair="1" onclick="selectWord(this)">
+                <span class="zh">紧张</span><span class="pinyin">jǐnzhāng</span>
+              </button>
+              <button class="match-word" data-pair="2" onclick="selectWord(this)">
+                <span class="zh">面试</span><span class="pinyin">miànshì</span>
+              </button>
+              <button class="match-word" data-pair="3" onclick="selectWord(this)">
+                <span class="zh">律师</span><span class="pinyin">lǜshī</span>
+              </button>
+              <button class="match-word" data-pair="4" onclick="selectWord(this)">
+                <span class="zh">笔试</span><span class="pinyin">bǐshì</span>
+              </button>
+              <button class="match-word" data-pair="5" onclick="selectWord(this)">
+                <span class="zh">应聘</span><span class="pinyin">yìngpìn</span>
+              </button>
+              <button class="match-word" data-pair="6" onclick="selectWord(this)">
+                <span class="zh">通知</span><span class="pinyin">tōngzhī</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 2: KHOI DONG 2 - CONG VIEC LY TUONG -->
+      <div class="slide" id="slide-2">
+        <div class="slide-card">
+          <span class="eyebrow warmup">🔥 <span class="zh">热身 2</span> · Khởi động</span>
+          <h2><span class="zh">你理想中的工作是什么样的？为什么？</span></h2>
+          <p class="subtitle">Công việc lý tưởng của bạn là công việc thế nào? Tại sao?</p>
+
+          <div class="student-select-bar">
+            <span class="ssb-label">👥 Chọn học sinh đang trả lời:</span>
+            <button type="button" class="student-btn active" id="student-btn-1" style="--sc:var(--c-hanzi)" onclick="selectStudent(1)">Học sinh 1</button>
+            <button type="button" class="student-btn" id="student-btn-2" style="--sc:var(--c-practice)" onclick="selectStudent(2)">Học sinh 2</button>
+            <button type="button" class="student-btn" id="student-btn-3" style="--sc:var(--c-phonetic)" onclick="selectStudent(3)">Học sinh 3</button>
+            <button type="button" class="btn-reset" style="margin-left:auto;" onclick="resetSurveyTable()">↺ Xoá lựa chọn</button>
+          </div>
+
+          <table class="survey-table">
+            <thead>
+              <tr>
+                <th><span class="zh">月收入</span> <em style="font-style:italic;">yuè shōurù</em></th>
+                <th><span class="zh">同事</span> <em style="font-style:italic;">tóngshì</em></th>
+                <th><span class="zh">交通</span> <em style="font-style:italic;">jiāotōng</em></th>
+                <th><span class="zh">上班时间</span> <em style="font-style:italic;">shàngbān shíjiān</em></th>
+                <th><span class="zh">和学的专业</span> <em style="font-style:italic;">hé xué de zhuānyè</em></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label">&lt;5<span class="zh">千</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">和朋友一样</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">地铁</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label">8:00–16:00</span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">一样</span></span></div></td>
+              </tr>
+              <tr>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label">5<span class="zh">千</span>–1<span class="zh">万</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">不常聊天儿</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">公共汽车</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label">9:00–17:00</span></div></td>
+                <td rowspan="2"><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">有一点儿关系</span></span></div></td>
+              </tr>
+              <tr>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label">1<span class="zh">万</span>–2<span class="zh">万</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">性格不一样</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">骑车</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label">10:00–18:00</span></div></td>
+              </tr>
+              <tr>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label">&gt;2<span class="zh">万</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">爱好差不多</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">走路</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">不用坐班</span></span></div></td>
+                <td><div class="survey-cell" onclick="toggleSurveyCell(this)"><span class="survey-dots"></span><span class="survey-label"><span class="zh">一点儿不一样</span></span></div></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: 课文1 -->
+      <div class="slide" id="slide-3">
+        <div class="slide-card">
+          <div class="fit-screen">
+            <span class="eyebrow text">📖 <span class="zh">课文 1</span></span>
+            <h2 class="zh" style="font-size:1.6rem;">小夏和小雨聊小雨面试的情况</h2>
+            <p class="subtitle">Tiểu Hạ và Tiểu Vũ nói chuyện về tình hình phỏng vấn của Tiểu Vũ</p>
+            <div class="text-layout">
+              <div class="text-layout-main">
+                <div class="audio-player-custom" id="aud1-wrap">
+                  <audio id="aud1" preload="metadata" src="03-1.mp3"
+                         onerror="handleAudioError('aud1')"
+                         onloadedmetadata="onAudioLoaded('aud1')"
+                         ontimeupdate="onAudioTimeUpdate('aud1')"
+                         onended="onAudioEnded('aud1')"></audio>
+                  <button type="button" class="apc-btn" id="aud1-btn" onclick="toggleAudio('aud1')" aria-label="Phát/Dừng audio"><span class="apc-icon-play">▶</span><span class="apc-icon-pause" style="display:none;">⏸</span></button>
+                  <input type="range" class="apc-range" id="aud1-range" value="0" min="0" max="0" step="0.01" oninput="onRangeInput('aud1')" aria-label="Tua audio 03-1">
+                  <span class="apc-time" id="aud1-time">00:00 / 00:00</span>
+                  <span class="audio-tag" id="aud1-tag" style="display:none;">🔊 Chưa có file âm thanh (03-1.mp3)</span>
+                </div>
+
+                <div class="dialogue-box">
+                  <div class="chat-row spk-a">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">夏</span><img class="chat-avatar-img" src="ava-xiaoxia.png" alt="小夏" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小夏</span><span class="chat-text zh">你上午的面试怎么样？</span></div>
+                  </div>
+                  <div class="chat-row spk-b">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">雨</span><img class="chat-avatar-img" src="ava-xiaoyu.png" alt="小雨" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小雨</span><span class="chat-text zh">还可以，他们问的问题都<span class="zh vocab-link" onclick="openVocabModal(0)">挺</span>容易的，就是我有点儿<span class="zh vocab-link" onclick="openVocabModal(1)">紧张</span>。</span></div>
+                  </div>
+                  <div class="chat-row spk-a">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">夏</span><img class="chat-avatar-img" src="ava-xiaoxia.png" alt="小夏" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小夏</span><span class="chat-text zh">面试的时候，一定要对自己有<span class="zh vocab-link" onclick="openVocabModal(2)">信心</span>，要相信自己的<span class="zh vocab-link" onclick="openVocabModal(3)">能力</span>。</span></div>
+                  </div>
+                  <div class="chat-row spk-b">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">雨</span><img class="chat-avatar-img" src="ava-xiaoyu.png" alt="小雨" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小雨</span><span class="chat-text zh">你说得对！3月15号上午8点在学校体育馆还有一个<span class="zh vocab-link" onclick="openVocabModal(4)">招聘</span>会，你去吗？</span></div>
+                  </div>
+                  <div class="chat-row spk-a">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">夏</span><img class="chat-avatar-img" src="ava-xiaoxia.png" alt="小夏" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小夏</span><span class="chat-text zh">我还没决定呢。</span></div>
+                  </div>
+                  <div class="chat-row spk-b">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">雨</span><img class="chat-avatar-img" src="ava-xiaoyu.png" alt="小雨" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小雨</span><span class="chat-text zh">听说这次招聘会<span class="zh vocab-link" onclick="openVocabModal(5)">提供</span>的工作机会很多，我们一起去看看吧。</span></div>
+                  </div>
+
+                  <div class="comprehension-box" id="cb1">
+                  <button class="cb-close-btn" onclick="toggleCompBoxById('cb1')" title="Đóng">✕</button>
+                  <div class="cb-title">🗨️ <span class="zh">根据课文内容回答问题</span> · Trả lời câu hỏi theo nội dung bài học</div>
+                  <div class="cb-body">
+                  <div class="cb-subtitle" style="margin-top:0; padding-top:0; border-top:none;"><span class="zh">课文1</span></div>
+                  <details class="qa-item">
+                    <summary>① <span class="zh">小雨面试时紧张吗？面试时应该怎样？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">小雨面试时有点儿紧张。面试的时候应该对自己有信心，要相信自己的能力。</span></div>
+                  </details>
+                  <details class="qa-item">
+                    <summary>② <span class="zh">体育馆的招聘会是在什么时候？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">3月15号上午8点，在学校体育馆。</span></div>
+                  </details>
+                  <div class="cb-subtitle"><span class="zh">课文2</span></div>
+                  <details class="qa-item">
+                    <summary>③ <span class="zh">谁负责过这次招聘工作？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">这次招聘本来是小李负责的，但是他突然生病住院了，所以就交给小林来做了。</span></div>
+                  </details>
+                  <details class="qa-item">
+                    <summary>④ <span class="zh">参加应聘的两个人适合不适合这个工作？为什么？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">适合。因为经过笔试和面试，这两个人的能力都比较符合公司的要求。</span></div>
+                  </details>
+                  <div class="cb-subtitle"><span class="zh">课文3</span></div>
+                  <details class="qa-item">
+                    <summary>⑤ <span class="zh">王静为什么很喜欢她现在的工作？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">因为她学的就是法律专业，而且同事们都很喜欢她，另外收入也不错。</span></div>
+                  </details>
+                  <details class="qa-item">
+                    <summary>⑥ <span class="zh">王静这次来北京是为了参加同学聚会吗？为什么？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">不是。她这次来北京时间安排得很紧张（书中未明确说明具体原因），但她还是决定借这次机会去跟大家见面，参加同学聚会。</span></div>
+                  </details>
+                  <div class="cb-subtitle">🗣️ <span class="zh">复述</span> · Thuật lại nội dung bài học</div>
+                  <div class="retell-box">
+                    <div class="retell-hint"><span class="zh">课文1：小雨的语气</span></div>
+                    <div class="retell-text zh">今天上午我参加了一个面试，……</div>
+                  </div>
+                  <div class="retell-box">
+                    <div class="retell-hint"><span class="zh">课文2：小林的语气</span></div>
+                    <div class="retell-text zh">这次招聘本来是小李负责的，可是……</div>
+                  </div>
+                  <div class="retell-box">
+                    <div class="retell-hint"><span class="zh">课文3：王静的语气</span></div>
+                    <div class="retell-text zh">我一毕业就去上海当律师了，……</div>
+                  </div>
+                  </div>
+          </div>
+                </div>
+
+              </div>
+
+              <div class="text-illustration-col">
+                <button class="cb-jump-btn" onclick="toggleCompBoxById('cb1')" title="Xem câu hỏi ôn bài">❓</button>
+                <div class="text-illustration-ph" id="cvImg1Ph">
+                  <span class="ph-icon">🖼️</span>
+                  <span class="ph-hint">Ảnh dọc minh hoạ <span class="zh">课文</span>1, cỡ lớn (tỉ lệ ~3:5), dạng 4 khung truyện tranh bám sát diễn biến hội thoại — xem gợi ý từ khoá chi tiết trong mục "🖼️ Ảnh cần chuẩn bị"</span>
+                </div>
+                <img class="text-illustration" id="cvImg1" src="03-1-img.png" alt="Ảnh minh hoạ 课文1" style="display:none;"
+                     onload="document.getElementById('cvImg1Ph').style.display='none'; this.style.display='block';"
+                     onerror="this.style.display='none';">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: 课文2 -->
+      <div class="slide" id="slide-4">
+        <div class="slide-card">
+          <div class="fit-screen">
+            <span class="eyebrow text">📖 <span class="zh">课文 2</span></span>
+            <h2 class="zh" style="font-size:1.6rem;">马经理和小林聊招聘的事情</h2>
+            <p class="subtitle">Giám đốc Mã và Tiểu Lâm nói chuyện về việc tuyển dụng</p>
+            <div class="text-layout">
+              <div class="text-layout-main">
+                <div class="audio-player-custom" id="aud2-wrap">
+                  <audio id="aud2" preload="metadata" src="03-2.mp3"
+                         onerror="handleAudioError('aud2')"
+                         onloadedmetadata="onAudioLoaded('aud2')"
+                         ontimeupdate="onAudioTimeUpdate('aud2')"
+                         onended="onAudioEnded('aud2')"></audio>
+                  <button type="button" class="apc-btn" id="aud2-btn" onclick="toggleAudio('aud2')" aria-label="Phát/Dừng audio"><span class="apc-icon-play">▶</span><span class="apc-icon-pause" style="display:none;">⏸</span></button>
+                  <input type="range" class="apc-range" id="aud2-range" value="0" min="0" max="0" step="0.01" oninput="onRangeInput('aud2')" aria-label="Tua audio 03-2">
+                  <span class="apc-time" id="aud2-time">00:00 / 00:00</span>
+                  <span class="audio-tag" id="aud2-tag" style="display:none;">🔊 Chưa có file âm thanh (03-2.mp3)</span>
+                </div>
+
+                <div class="dialogue-box">
+                  <div class="chat-row spk-a">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">马</span><img class="chat-avatar-img" src="ava-majingli.png" alt="马经理" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">马经理</span><span class="chat-text zh">小林，这次招聘不是小李<span class="zh vocab-link" onclick="openVocabModal(6)">负责</span>吗？</span></div>
+                  </div>
+                  <div class="chat-row spk-b">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">林</span><img class="chat-avatar-img" src="ava-xiaolin.png" alt="小林" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小林</span><span class="chat-text zh"><span class="zh vocab-link" onclick="openVocabModal(7)">本来</span>是小李负责的，但是他突然生病住院了，所以就交给我来做了。</span></div>
+                  </div>
+                  <div class="chat-row spk-a">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">马</span><img class="chat-avatar-img" src="ava-majingli.png" alt="马经理" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">马经理</span><span class="chat-text zh">哦，这次<span class="zh vocab-link" onclick="openVocabModal(8)">应聘</span>的人多吗？</span></div>
+                  </div>
+                  <div class="chat-row spk-b">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">林</span><img class="chat-avatar-img" src="ava-xiaolin.png" alt="小林" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小林</span><span class="chat-text zh">经理，这次来应聘的一共有15人。经过笔试和面试，有两个不错。这是他们的<span class="zh vocab-link" onclick="openVocabModal(9)">材料</span>，您看看。</span></div>
+                  </div>
+                  <div class="chat-row spk-a">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">马</span><img class="chat-avatar-img" src="ava-majingli.png" alt="马经理" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">马经理</span><span class="chat-text zh">这两个人的能力都比较<span class="zh vocab-link" onclick="openVocabModal(10)">符合</span>我们的要求。你<span class="zh vocab-link" onclick="openVocabModal(11)">通知</span>他们下周一上午九点来我办公室吧。</span></div>
+                  </div>
+                  <div class="chat-row spk-b">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">林</span><img class="chat-avatar-img" src="ava-xiaolin.png" alt="小林" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小林</span><span class="chat-text zh">好的，那我马上跟他们联系。</span></div>
+                  </div>
+
+                  <div class="comprehension-box" id="cb2">
+                  <button class="cb-close-btn" onclick="toggleCompBoxById('cb2')" title="Đóng">✕</button>
+                  <div class="cb-title">🗨️ <span class="zh">根据课文内容回答问题</span> · Trả lời câu hỏi theo nội dung bài học</div>
+                  <div class="cb-body">
+                  <div class="cb-subtitle" style="margin-top:0; padding-top:0; border-top:none;"><span class="zh">课文1</span></div>
+                  <details class="qa-item">
+                    <summary>① <span class="zh">小雨面试时紧张吗？面试时应该怎样？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">小雨面试时有点儿紧张。面试的时候应该对自己有信心，要相信自己的能力。</span></div>
+                  </details>
+                  <details class="qa-item">
+                    <summary>② <span class="zh">体育馆的招聘会是在什么时候？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">3月15号上午8点，在学校体育馆。</span></div>
+                  </details>
+                  <div class="cb-subtitle"><span class="zh">课文2</span></div>
+                  <details class="qa-item">
+                    <summary>③ <span class="zh">谁负责过这次招聘工作？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">这次招聘本来是小李负责的，但是他突然生病住院了，所以就交给小林来做了。</span></div>
+                  </details>
+                  <details class="qa-item">
+                    <summary>④ <span class="zh">参加应聘的两个人适合不适合这个工作？为什么？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">适合。因为经过笔试和面试，这两个人的能力都比较符合公司的要求。</span></div>
+                  </details>
+                  <div class="cb-subtitle"><span class="zh">课文3</span></div>
+                  <details class="qa-item">
+                    <summary>⑤ <span class="zh">王静为什么很喜欢她现在的工作？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">因为她学的就是法律专业，而且同事们都很喜欢她，另外收入也不错。</span></div>
+                  </details>
+                  <details class="qa-item">
+                    <summary>⑥ <span class="zh">王静这次来北京是为了参加同学聚会吗？为什么？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">不是。她这次来北京时间安排得很紧张（书中未明确说明具体原因），但她还是决定借这次机会去跟大家见面，参加同学聚会。</span></div>
+                  </details>
+                  <div class="cb-subtitle">🗣️ <span class="zh">复述</span> · Thuật lại nội dung bài học</div>
+                  <div class="retell-box">
+                    <div class="retell-hint"><span class="zh">课文1：小雨的语气</span></div>
+                    <div class="retell-text zh">今天上午我参加了一个面试，……</div>
+                  </div>
+                  <div class="retell-box">
+                    <div class="retell-hint"><span class="zh">课文2：小林的语气</span></div>
+                    <div class="retell-text zh">这次招聘本来是小李负责的，可是……</div>
+                  </div>
+                  <div class="retell-box">
+                    <div class="retell-hint"><span class="zh">课文3：王静的语气</span></div>
+                    <div class="retell-text zh">我一毕业就去上海当律师了，……</div>
+                  </div>
+                  </div>
+          </div>
+                </div>
+
+              </div>
+
+              <div class="text-illustration-col">
+                <button class="cb-jump-btn" onclick="toggleCompBoxById('cb2')" title="Xem câu hỏi ôn bài">❓</button>
+                <div class="text-illustration-ph" id="cvImg2Ph">
+                  <span class="ph-icon">🖼️</span>
+                  <span class="ph-hint">Ảnh dọc minh hoạ <span class="zh">课文</span>2, cỡ lớn (tỉ lệ ~3:5), dạng 4 khung truyện tranh bám sát diễn biến hội thoại — xem gợi ý từ khoá chi tiết trong mục "🖼️ Ảnh cần chuẩn bị"</span>
+                </div>
+                <img class="text-illustration" id="cvImg2" src="03-2-img.png" alt="Ảnh minh hoạ 课文2" style="display:none;"
+                     onload="document.getElementById('cvImg2Ph').style.display='none'; this.style.display='block';"
+                     onerror="this.style.display='none';">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: 课文3 -->
+      <div class="slide" id="slide-5">
+        <div class="slide-card">
+          <div class="fit-screen">
+            <span class="eyebrow text">📖 <span class="zh">课文 3</span></span>
+            <h2 class="zh" style="font-size:1.6rem;">小林和王静聊王静的工作情况</h2>
+            <p class="subtitle">Tiểu Lâm và Vương Tịnh nói chuyện về tình hình công việc của Vương Tịnh</p>
+            <div class="text-layout">
+              <div class="text-layout-main">
+                <div class="audio-player-custom" id="aud3-wrap">
+                  <audio id="aud3" preload="metadata" src="03-3.mp3"
+                         onerror="handleAudioError('aud3')"
+                         onloadedmetadata="onAudioLoaded('aud3')"
+                         ontimeupdate="onAudioTimeUpdate('aud3')"
+                         onended="onAudioEnded('aud3')"></audio>
+                  <button type="button" class="apc-btn" id="aud3-btn" onclick="toggleAudio('aud3')" aria-label="Phát/Dừng audio"><span class="apc-icon-play">▶</span><span class="apc-icon-pause" style="display:none;">⏸</span></button>
+                  <input type="range" class="apc-range" id="aud3-range" value="0" min="0" max="0" step="0.01" oninput="onRangeInput('aud3')" aria-label="Tua audio 03-3">
+                  <span class="apc-time" id="aud3-time">00:00 / 00:00</span>
+                  <span class="audio-tag" id="aud3-tag" style="display:none;">🔊 Chưa có file âm thanh (03-3.mp3)</span>
+                </div>
+
+                <div class="dialogue-box">
+                  <div class="chat-row spk-a">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">林</span><img class="chat-avatar-img" src="ava-xiaolin.png" alt="小林" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小林</span><span class="chat-text zh">王静，好久不见了！大学毕业后就没联系了，你现在在哪儿工作呢？</span></div>
+                  </div>
+                  <div class="chat-row spk-b">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">静</span><img class="chat-avatar-img" src="ava-wangjing.png" alt="王静" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">王静</span><span class="chat-text zh">我一毕业就去上海当<span class="zh vocab-link" onclick="openVocabModal(12)">律师</span>了。</span></div>
+                  </div>
+                  <div class="chat-row spk-a">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">林</span><img class="chat-avatar-img" src="ava-xiaolin.png" alt="小林" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小林</span><span class="chat-text zh">你对现在的工作一定非常满意吧？</span></div>
+                  </div>
+                  <div class="chat-row spk-b">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">静</span><img class="chat-avatar-img" src="ava-wangjing.png" alt="王静" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">王静</span><span class="chat-text zh">我很喜欢现在的工作，因为我学的就是法律<span class="zh vocab-link" onclick="openVocabModal(13)">专业</span>，而且同事们都很喜欢我。<span class="zh vocab-link" onclick="openVocabModal(14)">另外</span>，<span class="zh vocab-link" onclick="openVocabModal(15)">收入</span>也不错。</span></div>
+                  </div>
+                  <div class="chat-row spk-a">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">林</span><img class="chat-avatar-img" src="ava-xiaolin.png" alt="小林" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">小林</span><span class="chat-text zh">星期天<span class="zh vocab-link" onclick="openVocabModal(16)">咱们</span>同学聚会，你能来参加吗？</span></div>
+                  </div>
+                  <div class="chat-row spk-b">
+                    <span class="chat-avatar"><span class="chat-avatar-fallback zh">静</span><img class="chat-avatar-img" src="ava-wangjing.png" alt="王静" onload="this.previousElementSibling.style.display='none'; this.style.display='block';" onerror="this.style.display='none';"></span>
+                    <div class="chat-bubble"><span class="chat-speaker zh">王静</span><span class="chat-text zh">能来。虽然这次来北京，时间<span class="zh vocab-link" onclick="openVocabModal(17)">安排</span>得很紧张，但我一定借这次机会去跟大家见面。</span></div>
+                  </div>
+
+                  <div class="comprehension-box" id="cb3">
+                  <button class="cb-close-btn" onclick="toggleCompBoxById('cb3')" title="Đóng">✕</button>
+                  <div class="cb-title">🗨️ <span class="zh">根据课文内容回答问题</span> · Trả lời câu hỏi theo nội dung bài học</div>
+                  <div class="cb-body">
+                  <div class="cb-subtitle" style="margin-top:0; padding-top:0; border-top:none;"><span class="zh">课文1</span></div>
+                  <details class="qa-item">
+                    <summary>① <span class="zh">小雨面试时紧张吗？面试时应该怎样？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">小雨面试时有点儿紧张。面试的时候应该对自己有信心，要相信自己的能力。</span></div>
+                  </details>
+                  <details class="qa-item">
+                    <summary>② <span class="zh">体育馆的招聘会是在什么时候？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">3月15号上午8点，在学校体育馆。</span></div>
+                  </details>
+                  <div class="cb-subtitle"><span class="zh">课文2</span></div>
+                  <details class="qa-item">
+                    <summary>③ <span class="zh">谁负责过这次招聘工作？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">这次招聘本来是小李负责的，但是他突然生病住院了，所以就交给小林来做了。</span></div>
+                  </details>
+                  <details class="qa-item">
+                    <summary>④ <span class="zh">参加应聘的两个人适合不适合这个工作？为什么？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">适合。因为经过笔试和面试，这两个人的能力都比较符合公司的要求。</span></div>
+                  </details>
+                  <div class="cb-subtitle"><span class="zh">课文3</span></div>
+                  <details class="qa-item">
+                    <summary>⑤ <span class="zh">王静为什么很喜欢她现在的工作？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">因为她学的就是法律专业，而且同事们都很喜欢她，另外收入也不错。</span></div>
+                  </details>
+                  <details class="qa-item">
+                    <summary>⑥ <span class="zh">王静这次来北京是为了参加同学聚会吗？为什么？</span></summary>
+                    <div class="qa-answer"><span class="qa-tag">Gợi ý:</span> <span class="zh">不是。她这次来北京时间安排得很紧张（书中未明确说明具体原因），但她还是决定借这次机会去跟大家见面，参加同学聚会。</span></div>
+                  </details>
+                  <div class="cb-subtitle">🗣️ <span class="zh">复述</span> · Thuật lại nội dung bài học</div>
+                  <div class="retell-box">
+                    <div class="retell-hint"><span class="zh">课文1：小雨的语气</span></div>
+                    <div class="retell-text zh">今天上午我参加了一个面试，……</div>
+                  </div>
+                  <div class="retell-box">
+                    <div class="retell-hint"><span class="zh">课文2：小林的语气</span></div>
+                    <div class="retell-text zh">这次招聘本来是小李负责的，可是……</div>
+                  </div>
+                  <div class="retell-box">
+                    <div class="retell-hint"><span class="zh">课文3：王静的语气</span></div>
+                    <div class="retell-text zh">我一毕业就去上海当律师了，……</div>
+                  </div>
+                  </div>
+          </div>
+                </div>
+
+              </div>
+
+              <div class="text-illustration-col">
+                <button class="cb-jump-btn" onclick="toggleCompBoxById('cb3')" title="Xem câu hỏi ôn bài">❓</button>
+                <div class="text-illustration-ph" id="cvImg3Ph">
+                  <span class="ph-icon">🖼️</span>
+                  <span class="ph-hint">Ảnh dọc minh hoạ <span class="zh">课文</span>3, cỡ lớn (tỉ lệ ~3:5), dạng 4 khung truyện tranh bám sát diễn biến hội thoại — xem gợi ý từ khoá chi tiết trong mục "🖼️ Ảnh cần chuẩn bị"</span>
+                </div>
+                <img class="text-illustration" id="cvImg3" src="03-3-img.png" alt="Ảnh minh hoạ 课文3" style="display:none;"
+                     onload="document.getElementById('cvImg3Ph').style.display='none'; this.style.display='block';"
+                     onerror="this.style.display='none';">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 6: 课文4 -->
+      <div class="slide" id="slide-6">
+        <div class="slide-card">
+          <div class="fit-screen">
+            <span class="eyebrow text">📖 <span class="zh">课文 4</span></span>
+            <p class="subtitle">Bài đọc — Điều cần lưu ý khi phỏng vấn</p>
+            <div class="text-layout">
+              <div class="text-layout-main">
+                <div class="audio-player-custom" id="aud4-wrap">
+                  <audio id="aud4" preload="metadata" src="03-4.mp3"
+                         onerror="handleAudioError('aud4')"
+                         onloadedmetadata="onAudioLoaded('aud4')"
+                         ontimeupdate="onAudioTimeUpdate('aud4')"
+                         onended="onAudioEnded('aud4')"></audio>
+                  <button type="button" class="apc-btn" id="aud4-btn" onclick="toggleAudio('aud4')" aria-label="Phát/Dừng audio"><span class="apc-icon-play">▶</span><span class="apc-icon-pause" style="display:none;">⏸</span></button>
+                  <input type="range" class="apc-range" id="aud4-range" value="0" min="0" max="0" step="0.01" oninput="onRangeInput('aud4')" aria-label="Tua audio 03-4">
+                  <span class="apc-time" id="aud4-time">00:00 / 00:00</span>
+                  <span class="audio-tag" id="aud4-tag" style="display:none;">🔊 Chưa có file âm thanh (03-4.mp3)</span>
+                </div>
+
+                <div class="para-box zh">
+                  面试的时候，经理对我印象不错，还通知我明天就可以上班了。真没想到，找工作这么顺利。你想知道面试需要注意什么吗？<span class="zh vocab-link" onclick="openVocabModal(18)">首先</span>，要穿<span class="zh vocab-link" onclick="openVocabModal(19)">正式</span>的衣服，这会给面试者<span class="zh vocab-link" onclick="openVocabModal(20)">留</span>下一个好的印象，让他觉得你是一个认真的人。<span class="zh vocab-link" onclick="openVocabModal(21)">其次</span>，应聘时不要紧张。回答问题时，说得不要太快，声音也不要太小，要相信自己有能力做好。当然，最重要的是回答问题要<span class="zh vocab-link" onclick="openVocabModal(22)">诚实</span>。
+                </div>
+              </div>
+
+              <div class="text-illustration-col">
+                <div class="text-illustration-ph" id="cvImg4Ph">
+                  <span class="ph-icon">🖼️</span>
+                  <span class="ph-hint">Ảnh dọc minh hoạ <span class="zh">课文</span>4, cỡ lớn (tỉ lệ ~3:5), dạng 3 khung truyện tranh minh hoạ 3 lời khuyên phỏng vấn (mặc trang phục chỉnh tề · trả lời tự tin không vội · trả lời trung thực) — xem gợi ý từ khoá chi tiết trong mục "🖼️ Ảnh cần chuẩn bị"</span>
+                </div>
+                <img class="text-illustration" id="cvImg4" src="03-4-img.png" alt="Ảnh minh hoạ 课文4" style="display:none;"
+                     onload="document.getElementById('cvImg4Ph').style.display='none'; this.style.display='block';"
+                     onerror="this.style.display='none';">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 7: 课文5 -->
+      <div class="slide" id="slide-7">
+        <div class="slide-card">
+          <div class="fit-screen">
+            <span class="eyebrow text">📖 <span class="zh">课文 5</span></span>
+            <p class="subtitle">Bài đọc — Ấn tượng ban đầu</p>
+            <div class="text-layout">
+              <div class="text-layout-main">
+                <div class="audio-player-custom" id="aud5-wrap">
+                  <audio id="aud5" preload="metadata" src="03-5.mp3"
+                         onerror="handleAudioError('aud5')"
+                         onloadedmetadata="onAudioLoaded('aud5')"
+                         ontimeupdate="onAudioTimeUpdate('aud5')"
+                         onended="onAudioEnded('aud5')"></audio>
+                  <button type="button" class="apc-btn" id="aud5-btn" onclick="toggleAudio('aud5')" aria-label="Phát/Dừng audio"><span class="apc-icon-play">▶</span><span class="apc-icon-pause" style="display:none;">⏸</span></button>
+                  <input type="range" class="apc-range" id="aud5-range" value="0" min="0" max="0" step="0.01" oninput="onRangeInput('aud5')" aria-label="Tua audio 03-5">
+                  <span class="apc-time" id="aud5-time">00:00 / 00:00</span>
+                  <span class="audio-tag" id="aud5-tag" style="display:none;">🔊 Chưa có file âm thanh (03-5.mp3)</span>
+                </div>
+
+                <div class="para-box zh">
+                  第一印象就是在第一次见面时给别人留下的印象。虽然第一印象不总是对的，但如果想<span class="zh vocab-link" onclick="openVocabModal(23)">改变</span>却很困难。你给别人的第一印象会影响他们以后对你的<span class="zh vocab-link" onclick="openVocabModal(24)">感觉</span>和<span class="zh vocab-link" onclick="openVocabModal(25)">判断</span>。所以，给第一次见面的同事留下好的印象，以后的工作可能会更顺利；给第一次见面的<span class="zh vocab-link" onclick="openVocabModal(26)">顾客</span>留下好的印象，你可能会卖出更多的东西。但是，如果第一次见面给别人留下像不<span class="zh vocab-link" onclick="openVocabModal(27)">准时</span>这样的坏印象，那么以后就很难让别人相信你。所以<span class="zh vocab-link" onclick="openVocabModal(28)">不管</span>是上课、上班，还是<span class="zh vocab-link" onclick="openVocabModal(29)">与</span>别人<span class="zh vocab-link" onclick="openVocabModal(30)">约会</span>，准时都非常重要。
+                </div>
+              </div>
+
+              <div class="text-illustration-col">
+                <div class="text-illustration-ph" id="cvImg5Ph">
+                  <span class="ph-icon">🖼️</span>
+                  <span class="ph-hint">Ảnh dọc minh hoạ <span class="zh">课文</span>5, cỡ lớn (tỉ lệ ~3:5), dạng 3 khung truyện tranh minh hoạ chủ đề ấn tượng đầu tiên (đồng nghiệp/khách hàng/đúng giờ) — xem gợi ý từ khoá chi tiết trong mục "🖼️ Ảnh cần chuẩn bị"</span>
+                </div>
+                <img class="text-illustration" id="cvImg5" src="03-5-img.png" alt="Ảnh minh hoạ 课文5" style="display:none;"
+                     onload="document.getElementById('cvImg5Ph').style.display='none'; this.style.display='block';"
+                     onerror="this.style.display='none';">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 8: TONG HOP TU MOI -->
+      <div class="slide" id="slide-8">
+        <div class="slide-card">
+          <span class="eyebrow vocab">📚 <span class="zh">生词总表</span></span>
+          <h2>Tổng hợp từ mới cả bài</h2>
+          <p class="subtitle">Bấm vào một dòng bất kỳ để xem phân tích chữ Hán và bút thuận.</p>
+          <table class="vocab-table" id="vocabFullTable">
+            <thead>
+              <tr><th>STT</th><th><span class="zh">汉字</span></th><th>Pinyin</th><th>Từ loại</th><th>Nghĩa</th><th>BK</th></tr>
+            </thead>
+            <tbody id="vocabFullBody"></tbody>
+          </table>
+
+          <div style="margin-top:22px;">
+            <h4><span class="zh">专有名词</span> · Tên riêng xuất hiện trong bài</h4>
+            <table class="vocab-table">
+              <thead><tr><th><span class="zh">汉字</span></th><th>Pinyin</th><th>Nghĩa</th></tr></thead>
+              <tbody>
+                <tr><td class="t-hanzi zh">小雨</td><td><em style="font-style:italic;">Xiǎoyǔ</em></td><td>Tiểu Vũ</td></tr>
+                <tr><td class="t-hanzi zh">马</td><td><em style="font-style:italic;">Mǎ</em></td><td>họ Mã</td></tr>
+                <tr><td class="t-hanzi zh">小李</td><td><em style="font-style:italic;">Xiǎo Lǐ</em></td><td>Tiểu Lý</td></tr>
+                <tr><td class="t-hanzi zh">王静</td><td><em style="font-style:italic;">Wáng Jìng</em></td><td>Vương Tịnh</td></tr>
+                <tr><td class="t-hanzi zh">上海</td><td><em style="font-style:italic;">Shànghǎi</em></td><td>Thượng Hải</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 9: FLASHCARD -->
+      <div class="slide" id="slide-9">
+        <div class="slide-card">
+          <span class="eyebrow vocab">🃏 Flashcard</span>
+          <h2>Ôn từ vựng bằng Flashcard</h2>
+          <p class="subtitle">Bấm vào thẻ để lật xem pinyin và nghĩa.</p>
+
+          <div class="flashcard-wrap">
+            <div class="flashcard-scene">
+              <div class="flashcard" id="flashcardEl" onclick="flipCard()">
+                <div class="fc-face fc-front">
+                  <span class="hanzi-big zh" id="fcFrontHanzi">挺</span>
+                </div>
+                <div class="fc-face fc-back">
+                  <span class="pinyin-big" id="fcBackPinyin">tǐng</span>
+                  <span class="pos-big" id="fcBackPos">phó.</span>
+                  <span class="meaning-big" id="fcBackMeaning">rất</span>
+                </div>
+              </div>
+            </div>
+            <div class="fc-controls">
+              <button onclick="fcPrev(event)">◀ Trước</button>
+              <button class="btn-shuffle" onclick="fcShuffle(event)">🔀 Xáo trộn</button>
+              <button onclick="fcNext(event)">Sau ▶</button>
+            </div>
+            <div class="fc-hint" id="fcCounter">Thẻ 1 / 31</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="site-footer">
+    <span>HSK4 (giáo trình cũ) · Bài 3 — <span class="zh">经理对我印象不错</span> · Giám đốc có ấn tượng tốt về tôi</span>
+  </div>
+</div>
+
+<button class="back-to-top-btn" id="backToTopBtn" onclick="scrollToTop()" title="Về đầu trang">↑</button>
+<button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()" title="Xem toàn màn hình"><span id="fullscreenIcon">⛶</span></button>
+<button class="image-guide-btn" id="imageGuideBtn" onclick="openImageGuide()" title="Danh sách ảnh minh hoạ cần chèn">🖼️</button>
+
+<!-- MODAL: TU VUNG -->
+<div class="modal-overlay" id="vocabModal">
+  <div class="modal-box" style="max-width:960px;">
+    <button class="modal-close" onclick="closeVocabModal()">✕</button>
+    <div class="modal-body">
+      <div class="modal-top-row" id="mTopRow">
+        <div class="modal-head-block">
+          <div class="modal-word-head">
+            <span class="mw-hanzi zh" id="mHanzi">挺</span>
+            <span class="mw-pinyin" id="mPinyin">tǐng</span>
+          </div>
+          <span class="modal-pos" id="mPos">phó.</span>
+          <div class="modal-meaning" id="mMeaning">rất</div>
+          <button class="hw-toggle-btn" id="mHwToggleBtn" onclick="toggleHwRow()">✍️ Xem bút thuận</button>
+        </div>
+
+        <div class="hw-row" id="mHwRow"></div>
+      </div>
+
+      <div class="vocab-illustration-wrap" id="mIllustrationWrap">
+        <img class="vocab-illustration" id="mIllustration" src="" alt=""
+             onerror="document.getElementById('mIllustrationWrap').style.display='none';">
+      </div>
+
+      <div class="modal-usage-wrap" id="mUsageWrap" style="display:none;">
+        <button class="hw-toggle-btn usage-toggle-btn" id="mUsageToggleBtn" onclick="toggleUsageBlock()">⚠️ Xem cách dùng cần lưu ý</button>
+        <div class="modal-usage-content" id="mUsageContent">
+          <div class="modal-section-title">⚠️ Cách dùng cần lưu ý</div>
+          <div class="modal-usage" id="mUsage"></div>
+        </div>
+      </div>
+
+      <div class="modal-section-title modal-example-title" id="mExampleTitle">Ví dụ (ngoài bài khoá)</div>
+      <div class="modal-example" id="mExample"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: IMAGE GUIDE -->
+<div class="modal-overlay" id="imageGuideModal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeImageGuide()">✕</button>
+    <h3>🖼️ Ảnh &amp; audio cần chuẩn bị cho bài này</h3>
+
+    <div class="img-guide-path">
+      Đặt tất cả file (ảnh &amp; audio) <b>cùng thư mục với file HTML này</b> (không cần thư mục con), đặt tên file <b>đúng chính xác</b> như cột "Tên file" bên dưới. Với ảnh: copy nguyên văn cột "Gợi ý từ khoá tạo ảnh" (dán vào ChatGPT/Gemini/Midjourney...) để tạo, rồi đặt đúng tên file trước khi tải lên cùng file HTML.
+    </div>
+
+    <div class="modal-section-title" style="margin-top:4px;">🎬 Ảnh bìa (tỉ lệ ngang 16:9)</div>
+    <table class="guide-table">
+      <thead><tr><th>Vị trí</th><th>Tên file</th><th>Gợi ý từ khoá tạo ảnh</th></tr></thead>
+      <tbody>
+        <tr><td>Trang bìa</td><td class="fname"><code>bia.png</code></td>
+          <td>Ảnh minh hoạ ngang tỉ lệ 16:9, chủ đề xin việc – phỏng vấn, phong cách flat illustration hiện đại, tông màu cam đất – be pastel ấm áp, một ứng viên trẻ châu Á ngồi phỏng vấn trước bàn nhà tuyển dụng, tay cầm hồ sơ CV, cả hai đều tươi cười thân thiện, không khí văn phòng gọn gàng, không có chữ trong ảnh.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="modal-section-title">🔥 Khởi động 1 — Nối từ với hình (6 ảnh vuông tỉ lệ 1:1)</div>
+    <table class="guide-table">
+      <thead><tr><th>Từ minh hoạ</th><th>Tên file</th><th>Gợi ý từ khoá tạo ảnh</th></tr></thead>
+      <tbody>
+        <tr><td><span class="zh">律师</span> <i>lǜshī</i> (luật sư)</td><td class="fname"><code>anh-a.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, nữ luật sư châu Á trẻ tuổi mặc áo vest lịch sự, tay cầm cặp hồ sơ và một cuốn sách luật, dáng đứng tự tin, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">通知</span> <i>tōngzhī</i> (thông báo)</td><td class="fname"><code>anh-b.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một người đang dán tờ thông báo tuyển dụng lên bảng tin, vài người khác đứng gần đó chăm chú xem, nền màu đơn sắc pastel, không có chữ trong ảnh (không viết chữ lên tờ thông báo).</td></tr>
+        <tr><td><span class="zh">应聘</span> <i>yìngpìn</i> (ứng tuyển)</td><td class="fname"><code>anh-c.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, đông người xếp hàng dài tại hội chợ việc làm, mỗi người tay cầm một tập hồ sơ xin việc, không khí đông vui nhộn nhịp, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">面试</span> <i>miànshì</i> (phỏng vấn)</td><td class="fname"><code>anh-d.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, nhà tuyển dụng ngồi bàn trao đổi với một ứng viên, nhà tuyển dụng tay cầm hồ sơ CV, không khí trang trọng nhưng thân thiện, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">笔试</span> <i>bǐshì</i> (thi viết)</td><td class="fname"><code>anh-e.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, nhiều người ngồi ở bàn riêng biệt trong phòng thi, cắm cúi làm bài kiểm tra viết, không khí tập trung yên tĩnh, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">紧张</span> <i>jǐnzhāng</i> (căng thẳng)</td><td class="fname"><code>anh-f.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một người đàn ông trẻ châu Á đưa tay che miệng, trán lấm tấm vài giọt mồ hôi nhỏ cách điệu, biểu cảm lo lắng căng thẳng, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="modal-section-title">🔊 Audio bài khoá (định dạng .mp3)</div>
+    <table class="guide-table">
+      <thead><tr><th style="width:30%;">Bài khoá</th><th style="width:20%;">Tên file</th><th>Ghi chú</th></tr></thead>
+      <tbody>
+        <tr><td><span class="zh">课文</span>1 — Chuyện của Tiểu Vũ</td><td class="fname"><code>03-1.mp3</code></td><td>Trùng số track đĩa audio gốc HSK (nếu có sẵn từ bộ sách, chỉ cần đổi tên).</td></tr>
+        <tr><td><span class="zh">课文</span>2 — Chuyện của Tiểu Lâm</td><td class="fname"><code>03-2.mp3</code></td><td>Trùng số track đĩa audio gốc HSK (nếu có sẵn từ bộ sách, chỉ cần đổi tên).</td></tr>
+        <tr><td><span class="zh">课文</span>3 — Chuyện của Vương Tịnh</td><td class="fname"><code>03-3.mp3</code></td><td>Trùng số track đĩa audio gốc HSK (nếu có sẵn từ bộ sách, chỉ cần đổi tên).</td></tr>
+        <tr><td><span class="zh">课文</span>4 — Điều cần lưu ý khi phỏng vấn</td><td class="fname"><code>03-4.mp3</code></td><td>Bạn đã có sẵn file này — chỉ cần đặt đúng tên.</td></tr>
+        <tr><td><span class="zh">课文</span>5 — Ấn tượng ban đầu</td><td class="fname"><code>03-5.mp3</code></td><td>Bạn đã có sẵn file này — chỉ cần đặt đúng tên.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="modal-section-title">🧑 Ảnh đại diện nhân vật hội thoại — avatar tròn (định dạng .png)</div>
+    <table class="guide-table">
+      <thead><tr><th style="width:20%;">Nhân vật</th><th style="width:16%;">Tên file</th><th>Gợi ý từ khoá tạo ảnh</th></tr></thead>
+      <tbody>
+        <tr><td><span class="zh">小夏</span> (Tiểu Hạ)</td><td class="fname"><code>ava-xiaoxia.png</code></td>
+          <td>Ảnh chân dung vuông cận mặt, phong cách flat illustration dễ thương, <b>nam</b> sinh viên trẻ châu Á, tóc ngắn hơi rối tự nhiên, mặc áo sơ mi xanh dương nhạt, đeo kính gọng mỏng, biểu cảm thân thiện, nền màu pastel đơn sắc, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">小雨</span> (Tiểu Vũ)</td><td class="fname"><code>ava-xiaoyu.png</code></td>
+          <td>Ảnh chân dung vuông cận mặt, phong cách flat illustration dễ thương, <b>nam</b> sinh viên trẻ châu Á, tóc ngắn húi cao gọn gàng, không đeo kính, mặc áo hoodie màu cam đất, biểu cảm thân thiện, nền màu pastel đơn sắc, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">马经理</span> (Giám đốc Mã)</td><td class="fname"><code>ava-majingli.png</code></td>
+          <td>Ảnh chân dung vuông cận mặt, phong cách flat illustration dễ thương, <b>nam</b> quản lý châu Á trung niên, tóc ngắn chải gọn điểm bạc hai bên thái dương, mặc áo vest xám lịch sự, đeo cà vạt xanh navy, biểu cảm nghiêm túc nhưng thân thiện, nền màu pastel đơn sắc, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">小林</span> (Tiểu Lâm)</td><td class="fname"><code>ava-xiaolin.png</code></td>
+          <td>Ảnh chân dung vuông cận mặt, phong cách flat illustration dễ thương, <b>nam</b> nhân viên văn phòng trẻ châu Á, tóc ngắn gọn gàng rẽ ngôi, mặc áo sơ mi trắng không cà vạt, tay áo xắn nhẹ, biểu cảm nhanh nhẹn thân thiện, nền màu pastel đơn sắc, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">王静</span> (Vương Tịnh)</td><td class="fname"><code>ava-wangjing.png</code></td>
+          <td>Ảnh chân dung vuông cận mặt, phong cách flat illustration dễ thương (đồng bộ với các nhân vật khác trong bài), <b>nữ</b> luật sư trẻ châu Á, tóc buộc cao gọn gàng, mặc áo sơ mi màu hồng phấn lịch sự — giữ đúng tạo hình nhân vật <span class="zh">王静</span> đã dùng ở Bài 1 (Vương Tịnh) để xuyên suốt bộ giáo trình, biểu cảm tự tin thân thiện, nền màu pastel đơn sắc, không có chữ trong ảnh.</td></tr>
+      </tbody>
+    </table>
+    <div class="img-guide-path" style="margin-top:8px; font-style:italic;">⚠️ Lưu ý: 4 trong 5 nhân vật của bài đều là nam nên mỗi người cần mô tả riêng đặc điểm khác nhau (kiểu tóc, phụ kiện, màu trang phục, độ tuổi…) như trên — nếu mô tả giống nhau, công cụ tạo ảnh AI (ChatGPT/Gemini…) dễ vẽ ra các nhân vật trông giống hệt nhau, khó phân biệt khi ghép vào hội thoại. Riêng <span class="zh">王静</span> cần khớp tạo hình với nhân vật cùng tên ở file Bài 1.</div>
+
+    <div class="modal-section-title">📖 Ảnh minh hoạ bài khoá — ảnh dọc (định dạng .png)</div>
+    <table class="guide-table">
+      <thead><tr><th style="width:30%;">Bài khoá</th><th style="width:20%;">Tên file</th><th>Ghi chú</th></tr></thead>
+      <tbody>
+        <tr><td><span class="zh">课文</span>1 — Chuyện của Tiểu Vũ</td><td class="fname"><code>03-1-img.png</code></td>
+          <td>Ảnh dọc tỉ lệ ~3:5, dạng 4 khung truyện tranh bám sát diễn biến hội thoại, hai nhân vật xuyên suốt 4 khung đều là <b>nam sinh viên châu Á</b> (không phải nữ) — giữ đúng tạo hình như avatar ở trên để phân biệt rõ: <b>Tiểu Hạ</b> (tóc ngắn hơi rối, đeo kính gọng mỏng, áo sơ mi xanh dương nhạt) và <b>Tiểu Vũ</b> (tóc ngắn húi cao, không đeo kính, áo hoodie cam đất): (1) Tiểu Hạ hỏi thăm Tiểu Vũ về buổi phỏng vấn sáng nay; (2) Tiểu Vũ kể lại, hơi căng thẳng; (3) Tiểu Hạ động viên Tiểu Vũ tự tin vào bản thân; (4) hai người bàn về hội chợ việc làm ngày 15/3 tại nhà thi đấu trường. Phong cách flat illustration, tông màu pastel ấm, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">课文</span>2 — Chuyện của Tiểu Lâm</td><td class="fname"><code>03-2-img.png</code></td>
+          <td>Ảnh dọc tỉ lệ ~3:5, dạng 4 khung truyện tranh bám sát diễn biến hội thoại, hai nhân vật xuyên suốt 4 khung đều là <b>nam giới châu Á</b> — giữ đúng tạo hình như avatar ở trên để phân biệt rõ: <b>马经理</b> (nam trung niên, tóc điểm bạc, áo vest xám, cà vạt xanh navy) và <b>小林</b> (nam trẻ, tóc rẽ ngôi gọn gàng, áo sơ mi trắng tay xắn): (1) trong văn phòng, 马经理 ngồi bàn làm việc hỏi 小林 đầy thắc mắc về việc ai phụ trách tuyển dụng lần này; (2) 小林 đứng giải thích, tay cầm một xấp hồ sơ, vẻ mặt bình tĩnh kể lại việc được giao thay người khác; (3) 小林 đưa hai bộ hồ sơ ứng viên (2 tập tài liệu mỏng) lên bàn cho 马经理 xem, cả hai cùng nhìn vào tài liệu; (4) 马经理 gật đầu hài lòng chỉ tay vào lịch/đồng hồ treo tường, 小林 gật đầu ghi chú lại — Phong cách flat illustration, tông màu pastel ấm, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">课文</span>3 — Chuyện của Vương Tịnh</td><td class="fname"><code>03-3-img.png</code></td>
+          <td>Ảnh dọc tỉ lệ ~3:5, dạng 4 khung truyện tranh bám sát diễn biến hội thoại, hai nhân vật xuyên suốt 4 khung — giữ đúng tạo hình như avatar ở trên để phân biệt rõ: <b>小林</b> (nam trẻ, tóc rẽ ngôi gọn gàng, áo sơ mi trắng tay xắn) và <b>王静</b> (nữ trẻ, tóc buộc cao, áo sơ mi hồng phấn, khớp tạo hình với 王静 ở Bài 1): (1) 小林 và 王静 tình cờ gặp lại nhau, 小林 vui mừng hỏi thăm chỗ làm hiện tại của 王静; (2) 王静 tự tin kể mình đang làm luật sư ở Thượng Hải, trên tay cầm cặp tài liệu công việc; (3) 王静 kể tiếp về công việc mình yêu thích, xung quanh có hình ảnh nhỏ gợi ý đồng nghiệp thân thiện; (4) 小林 mời 王静 đến buổi họp mặt bạn học vào Chủ nhật, 王静 gật đầu đồng ý dù lịch trình bận rộn (có thể có chi tiết nhỏ như vali/lịch làm việc gợi ý cô đang đi công tác) — Phong cách flat illustration, tông màu pastel ấm, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">课文</span>4 — Điều cần lưu ý khi phỏng vấn</td><td class="fname"><code>03-4-img.png</code></td>
+          <td>Ảnh dọc tỉ lệ ~3:5, dạng 3 khung truyện tranh (không cần hội thoại 2 người, đây là bài đọc độc thoại), nhân vật chính là <b>小雨</b> (giữ đúng tạo hình avatar ở trên: tóc ngắn húi cao, không đeo kính, áo hoodie cam đất): (1) 小雨 đứng trước gương chỉnh sửa lại áo sơ mi/vest chỉnh tề trước khi đi phỏng vấn; (2) 小雨 ngồi trả lời phỏng vấn bình tĩnh tự tin, không có vẻ vội vàng, đối diện là nhà tuyển dụng đang lắng nghe gật gù; (3) 小雨 bắt tay nhà tuyển dụng với nụ cười thoải mái, ngụ ý trả lời trung thực chân thành — Phong cách flat illustration, tông màu pastel ấm, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">课文</span>5 — Ấn tượng ban đầu</td><td class="fname"><code>03-5-img.png</code></td>
+          <td>Ảnh dọc tỉ lệ ~3:5, dạng 3 khung truyện tranh minh hoạ ý bài đọc tổng kết (không có nhân vật cố định xuyên suốt): (1) hai người bắt tay chào nhau lần đầu, phía trên có một biểu tượng bóng đèn/dấu ấn nhỏ tượng trưng ấn tượng ban đầu hình thành; (2) một nhân viên bán hàng tươi cười đưa hàng cho khách hàng (顾客) hài lòng, ngụ ý ấn tượng tốt giúp công việc thuận lợi; (3) một người nhìn đồng hồ đeo tay vội vã chạy đến cuộc hẹn đúng giờ, vẻ mặt quyết tâm không trễ hẹn — Phong cách flat illustration, tông màu pastel ấm, không có chữ trong ảnh.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="modal-section-title">📚 Ảnh minh hoạ từ vựng — ảnh vuông 1:1, dùng trong modal bấm từ (định dạng .png)</div>
+    <div class="img-guide-path" style="margin-bottom:8px; font-style:italic;">⚠️ Mỗi từ có ảnh minh hoạ riêng biệt, không tái dùng ảnh đã dùng ở phần khác (kể cả khi nghĩa gần giống) — để tránh học sinh nhầm lẫn khi cùng một ảnh xuất hiện ở hai ngữ cảnh khác nhau.</div>
+    <table class="guide-table">
+      <thead><tr><th style="width:30%;">Từ</th><th style="width:20%;">Tên file</th><th>Ghi chú</th></tr></thead>
+      <tbody>
+        <tr><td><span class="zh">挺</span> <i>tǐng</i> (rất)</td><td class="fname"><code>ting.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một chiếc đồng hồ đo mức độ/đồng hồ đo áp suất kiểu hoạt hình với kim chỉ gần lên tới vạch cao nhất (gần kịch mức "rất"), có thể thêm vài tia toả nhỏ quanh mặt đồng hồ, nền màu đơn sắc pastel, không có chữ và không có số trong ảnh.</td></tr>
+        <tr><td><span class="zh">紧张</span> <i>jǐnzhāng</i> (hồi hộp, căng thẳng)</td><td class="fname"><code>jinzhang.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một người trẻ châu Á ngồi trên ghế chờ phỏng vấn, hai tay siết chặt vào nhau đặt trên đùi, vai hơi so lại, ánh mắt nhìn xuống lo lắng, có vài giọt mồ hôi nhỏ cách điệu trên trán, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">信心</span> <i>xìnxīn</i> (lòng tin, sự tự tin)</td><td class="fname"><code>xinxin.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một người trẻ châu Á đứng ưỡn ngực tự tin, tay nắm chặt giơ lên ngang vai, ánh sáng toả rạng phía sau như hào quang nhẹ, biểu cảm quyết tâm rạng rỡ, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">能力</span> <i>nénglì</i> (năng lực, khả năng)</td><td class="fname"><code>nengli.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một người trẻ châu Á đứng nâng một chiếc cúp/tạ nhẹ lên cao bằng một tay, biểu cảm tự hào mạnh mẽ, có thể thêm vài tia sáng nhỏ quanh cánh tay tượng trưng cho sức mạnh, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">招聘</span> <i>zhāopìn</i> (tuyển dụng)</td><td class="fname"><code>zhaopin.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một chiếc loa phóng thanh nhỏ kiểu hoạt hình đang "thổi" ra vài biểu tượng nhỏ (mũ tốt nghiệp, cặp tài liệu) bay lên, ngụ ý thông báo tìm người, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">提供</span> <i>tígōng</i> (cung cấp)</td><td class="fname"><code>tigong.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một bàn tay đưa ra một hộp quà/tài liệu cho một bàn tay khác đang đón nhận, cử chỉ trao – nhận rõ ràng, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">负责</span> <i>fùzé</i> (phụ trách, chịu trách nhiệm)</td><td class="fname"><code>fuze.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một người trẻ châu Á đứng cạnh một tấm bảng kế hoạch có vài ô vuông trống (không chữ), tay cầm bút chỉ vào bảng, dáng vẻ chững chạc đảm nhận công việc, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">本来</span> <i>běnlái</i> (lúc đầu, trước đây)</td><td class="fname"><code>benlai.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một chiếc đồng hồ cát cách điệu với mũi tên cong quay ngược về phía sau, ngụ ý quay lại thời điểm ban đầu, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">应聘</span> <i>yìngpìn</i> (xin việc, ứng tuyển)</td><td class="fname"><code>yingpin.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một người trẻ châu Á đứng thẳng, một tay đưa ra tập hồ sơ CV về phía trước như đang nộp cho ai đó ngoài khung hình, biểu cảm tự tin, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">材料</span> <i>cáiliào</i> (tư liệu, tài liệu)</td><td class="fname"><code>cailiao.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một chồng hồ sơ/tập tài liệu giấy xếp gọn gàng có kẹp bìa màu, không có chữ trên bìa, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">符合</span> <i>fúhé</i> (phù hợp)</td><td class="fname"><code>fuhe.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, hai mảnh ghép hình học (như mảnh ghép puzzle) đang khớp vừa khít vào nhau, có dấu tích ✓ nhỏ hiện lên phía trên, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">通知</span> <i>tōngzhī</i> (báo tin, thông báo)</td><td class="fname"><code>tongzhi.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một chiếc phong bì thư đang mở với một tờ giấy nhỏ trống (không chữ) bay ra, có biểu tượng chuông nhỏ cạnh bên ngụ ý thông báo, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">律师</span> <i>lǜshī</i> (luật sư)</td><td class="fname"><code>lvshi.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một người trẻ châu Á mặc áo vest lịch sự, tay ôm một cuốn sách luật/cặp hồ sơ, dáng đứng tự tin chững chạc, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">专业</span> <i>zhuānyè</i> (chuyên ngành)</td><td class="fname"><code>zhuanye.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một chiếc mũ tốt nghiệp đặt cạnh vài biểu tượng nhỏ đại diện các ngành học khác nhau (quyển sách, ống nghiệm, cây bút), ngụ ý lĩnh vực học tập chuyên sâu, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">另外</span> <i>lìngwài</i> (ngoài ra)</td><td class="fname"><code>lingwai.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một dấu cộng (+) lớn cách điệu đặt cạnh một hình tròn nhỏ phụ thêm bên cạnh hình tròn chính, ngụ ý bổ sung thêm một điều khác, nền màu đơn sắc pastel, không có chữ và không có số trong ảnh.</td></tr>
+        <tr><td><span class="zh">收入</span> <i>shōurù</i> (thu nhập)</td><td class="fname"><code>shouru.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một bàn tay đang bỏ đồng tiền/tờ tiền cách điệu vào một chiếc ví hoặc lợn đất, mũi tên nhỏ chỉ vào trong ngụ ý dòng tiền đi vào, nền màu đơn sắc pastel, không có chữ và không có số trong ảnh.</td></tr>
+        <tr><td><span class="zh">咱们</span> <i>zánmen</i> (chúng ta, chúng mình)</td><td class="fname"><code>zanmen.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, hai người trẻ châu Á đứng cạnh nhau khoác vai thân thiện, cùng hướng về phía trước, ngụ ý sự gần gũi thân mật giữa người nói và người nghe, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">安排</span> <i>ānpái</i> (sắp xếp)</td><td class="fname"><code>anpai.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một cuốn lịch/sổ tay để bàn mở ra với vài ô nhỏ được đánh dấu gọn gàng theo thứ tự (không có chữ số), bên cạnh có một chiếc bút, ngụ ý sắp xếp kế hoạch, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">首先</span> <i>shǒuxiān</i> (trước hết, trước tiên)</td><td class="fname"><code>shouxian.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, huy hiệu tròn cách điệu có số "1" lớn ở giữa (như huy chương vị trí thứ nhất), có vài tia toả nhẹ xung quanh, nền màu đơn sắc pastel, không có chữ trong ảnh (chỉ giữ số 1 trên huy hiệu).</td></tr>
+        <tr><td><span class="zh">正式</span> <i>zhèngshì</i> (chính thức, trang trọng)</td><td class="fname"><code>zhengshi.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một chiếc áo vest treo trên móc áo cùng cà vạt gọn gàng bên cạnh, dáng vẻ lịch sự trang trọng, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">留</span> <i>liú</i> (để lại)</td><td class="fname"><code>liu.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một dấu chân/vết in nhỏ cách điệu để lại trên nền cát hoặc một trái tim nhỏ để lại phía sau khi một người bước đi xa dần, ngụ ý để lại điều gì đó, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">其次</span> <i>qícì</i> (thứ hai, sau đó)</td><td class="fname"><code>qici.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, huy hiệu tròn cách điệu có số "2" lớn ở giữa (như huy chương vị trí thứ hai), đồng bộ phong cách với huy hiệu số 1 của từ <span class="zh">首先</span>, nền màu đơn sắc pastel, không có chữ trong ảnh (chỉ giữ số 2 trên huy hiệu).</td></tr>
+        <tr><td><span class="zh">诚实</span> <i>chéngshí</i> (thành thật)</td><td class="fname"><code>chengshi.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một người trẻ châu Á đặt tay lên ngực trái với biểu cảm chân thành, phía trên có một dấu tích ✓ nhỏ bên trong hình trái tim cách điệu, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">改变</span> <i>gǎibiàn</i> (thay đổi)</td><td class="fname"><code>gaibian.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, hai hình tròn cách điệu một màu xanh nhạt một màu cam, có mũi tên cong nối từ hình này sang hình kia, ngụ ý sự chuyển đổi/thay đổi, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">感觉</span> <i>gǎnjué</i> (cảm giác, cảm nghĩ)</td><td class="fname"><code>ganjue.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một trái tim nhỏ cách điệu đặt cạnh biểu tượng bóng đèn, ngụ ý cảm nhận/cảm giác nội tâm, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">判断</span> <i>pànduàn</i> (nhận xét, đánh giá)</td><td class="fname"><code>panduan.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một chiếc cân thăng bằng cách điệu (như cân công lý) với hai đĩa cân ngang bằng nhau, ngụ ý xem xét đánh giá, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">顾客</span> <i>gùkè</i> (khách hàng)</td><td class="fname"><code>guke.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một người trẻ châu Á đứng cầm túi mua sắm nhỏ, mỉm cười hài lòng, bên cạnh có một quầy thu ngân đơn giản phía sau, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">准时</span> <i>zhǔnshí</i> (đúng giờ)</td><td class="fname"><code>zhunshi.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một chiếc đồng hồ đeo tay/đồng hồ treo tường cách điệu với dấu tích ✓ lớn nổi bật cạnh mặt đồng hồ, ngụ ý đúng giờ, nền màu đơn sắc pastel, không có chữ và không có số trong ảnh.</td></tr>
+        <tr><td><span class="zh">不管</span> <i>bùguǎn</i> (bất kể, bất luận)</td><td class="fname"><code>buguan.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, một con đường chia làm hai nhánh nhỏ (trái/phải) nhưng cùng dẫn về một đích đến hình ngôi sao ở cuối, ngụ ý dù đi đường nào kết quả vẫn như nhau, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">与</span> <i>yǔ</i> (với, và)</td><td class="fname"><code>yu.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, hai hình tròn nhỏ chồng lấn nhẹ vào nhau ở giữa (kiểu sơ đồ Venn đơn giản), ngụ ý sự kết nối giữa hai đối tượng, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+        <tr><td><span class="zh">约会</span> <i>yuēhuì</i> (hẹn gặp, hẹn hò)</td><td class="fname"><code>yuehui.png</code></td>
+          <td>Ảnh vuông tỉ lệ 1:1, phong cách flat illustration dễ thương, tông màu pastel ấm, hai người trẻ châu Á ngồi đối diện nhau ở bàn cà phê nhỏ, tách trà/cà phê ở giữa, không khí thân mật nhẹ nhàng, nền màu đơn sắc pastel, không có chữ trong ảnh.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+/* ============ SIDEBAR / NAVIGATION ============ */
+function toggleSidebar(){ document.body.classList.toggle('sidebar-collapsed'); }
+
+var totalSlides = 10;
+var current = 0;
+function showSlide(n){
+  if(n<0) n=0; if(n>totalSlides-1) n=totalSlides-1;
+  document.getElementById('slide-'+current).classList.remove('active');
+  var navCurrent = document.querySelector('.nav-item.active, .nav-single > button.active');
+  if(navCurrent) navCurrent.classList.remove('active');
+  current = n;
+  var slideEl = document.getElementById('slide-'+current);
+  slideEl.classList.add('active');
+  document.body.classList.toggle('has-fit-slide', slideEl.classList.contains('text-fit'));
+  document.body.classList.toggle('on-cover', current === 0);
+  var navNext = document.querySelector('[data-slide="'+current+'"]');
+  if(navNext) navNext.classList.add('active');
+  document.getElementById('slideCounter').textContent = (current+1)+' / '+totalSlides;
+  window.scrollTo(0,0);
+}
+function goTo(n){ showSlide(n); }
+document.addEventListener('keydown', function(e){
+  if(e.key==='ArrowRight'){ showSlide(current+1); } else if(e.key==='ArrowLeft'){ showSlide(current-1); }
+  else if(e.key==='Escape'){ closeVocabModal(); closeImageGuide(); }
+});
+
+/* ============ IMAGE GUIDE MODAL ============ */
+function openImageGuide(){ document.getElementById('imageGuideModal').classList.add('show'); }
+function closeImageGuide(){ document.getElementById('imageGuideModal').classList.remove('show'); }
+document.getElementById('imageGuideModal').addEventListener('click', function(e){ if(e.target===this) closeImageGuide(); });
+
+/* ============ COMPREHENSION BOX (cau hoi hieu bai) ============ */
+function toggleCompBox(btn){
+  var box = btn.closest('.comprehension-box');
+  box.classList.toggle('open');
+}
+function openCompBoxById(id){
+  var box = document.getElementById(id);
+  if(!box) return;
+  box.classList.add('open');
+  box.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+function closeCompBoxById(id){
+  var box = document.getElementById(id);
+  if(!box) return;
+  box.classList.remove('open');
+}
+function toggleCompBoxById(id){
+  var box = document.getElementById(id);
+  if(!box) return;
+  if(box.classList.contains('open')){ closeCompBoxById(id); } else { openCompBoxById(id); }
+}
+
+/* ============ VOCAB DATA — 课文1 ============ */
+var vocabData = [
+  {hanzi:"挺", pinyin:"tǐng", pos:"phó.", meaning:"rất", usage:[
+    {pattern:"<span class=\"zh\">挺</span> + tt./đgt. + (<span class=\"zh\">的</span>)", note:"<ul><li>Là phó từ chỉ mức độ, dùng trong khẩu ngữ, gần nghĩa với <span class=\"zh\">很</span> nhưng thân mật hơn</li><li>Thường có <span class=\"zh\">的</span> ở cuối câu/cụm từ, đặc biệt khi câu dừng ở đó</li><li>VD trong bài: <span class=\"zh\">问题都挺容易的</span></li></ul>"}
+  ], examples:[
+    {zh:"这家饭馆儿的菜挺好吃的。", vi:"Món ăn ở quán này khá ngon."},
+    {zh:"他挺聪明的，学得很快。", vi:"Cậu ấy khá thông minh, học rất nhanh."}]},
+  {hanzi:"紧张", pinyin:"jǐnzhāng", pos:"tt.", meaning:"hồi hộp, căng thẳng", examples:[
+    {zh:"明天要考试了，我有点儿紧张。", vi:"Ngày mai phải thi rồi, tôi hơi căng thẳng."},
+    {zh:"别紧张，慢慢说就可以了。", vi:"Đừng căng thẳng, cứ từ từ nói là được."}]},
+  {hanzi:"信心", pinyin:"xìnxīn", pos:"dt.", meaning:"lòng tin, sự tự tin", usage:[
+    {pattern:"<span class=\"zh\">对</span> + N/<span class=\"zh\">自己</span> + <span class=\"zh\">有</span>(<span class=\"zh\">没有</span>) + <span class=\"zh\">信心</span>", note:"<ul><li>Diễn tả \"có/không có lòng tin vào...\"</li><li>Đối tượng tin tưởng đặt sau <span class=\"zh\">对</span></li><li>VD trong bài: <span class=\"zh\">对自己有信心</span></li></ul>"}
+  ], examples:[
+    {zh:"你要对自己有信心，一定可以做好。", vi:"Bạn phải tự tin vào bản thân, chắc chắn sẽ làm tốt."},
+    {zh:"第一次上课，他对自己没有太大的信心。", vi:"Lần đầu lên lớp dạy, anh ấy không tự tin lắm."}]},
+  {hanzi:"能力", pinyin:"nénglì", pos:"dt.", meaning:"năng lực, khả năng", examples:[
+    {zh:"我相信自己的能力，可以完成这个工作。", vi:"Tôi tin vào khả năng của mình, có thể hoàn thành công việc này."},
+    {zh:"这份工作需要很强的能力。", vi:"Công việc này đòi hỏi năng lực rất tốt."}]},
+  {hanzi:"招聘", pinyin:"zhāopìn", pos:"đgt.", meaning:"tuyển dụng", usage:[
+    {pattern:"<span class=\"zh\">招聘</span> + O (nhân viên/vị trí công việc)", note:"<ul><li>Là động từ: công ty/đơn vị <span class=\"zh\">招聘</span> người</li><li>Ghép với <span class=\"zh\">会</span> thành danh từ <span class=\"zh\">招聘会</span> = hội chợ việc làm, ngày hội tuyển dụng</li><li>VD trong bài: <span class=\"zh\">招聘会</span></li></ul>"}
+  ], examples:[
+    {zh:"这家公司正在招聘新员工。", vi:"Công ty này đang tuyển nhân viên mới."},
+    {zh:"下个星期学校有一个招聘会。", vi:"Tuần sau trường có một hội chợ việc làm."}]},
+  {hanzi:"提供", pinyin:"tígōng", pos:"đgt.", meaning:"cung cấp", usage:[
+    {pattern:"A + <span class=\"zh\">提供</span> + O + (<span class=\"zh\">给</span> + B)", note:"<ul><li>A cung cấp O (cho B)</li><li>Tân ngữ O thường là danh từ trừu tượng: <span class=\"zh\">机会</span>, <span class=\"zh\">帮助</span>, <span class=\"zh\">信息</span>...</li><li>VD trong bài: <span class=\"zh\">提供的工作机会</span></li></ul>"}
+  ], examples:[
+    {zh:"这次招聘会提供的工作机会很多。", vi:"Hội chợ việc làm lần này cung cấp rất nhiều cơ hội việc làm."},
+    {zh:"学校为学生提供了很多学习机会。", vi:"Nhà trường đã cung cấp cho học sinh rất nhiều cơ hội học tập."}]},
+  {hanzi:"负责", pinyin:"fùzé", pos:"đgt.", meaning:"phụ trách, chịu trách nhiệm", usage:[
+    {pattern:"A + <span class=\"zh\">负责</span> + O (công việc/dự án)", note:"<ul><li>A chịu trách nhiệm/phụ trách việc O</li><li>Có thể dùng dạng bị động với <span class=\"zh\">是...负责的</span> để nhấn mạnh ai là người phụ trách</li><li>VD trong bài: <span class=\"zh\">这次招聘不是小李负责吗</span></li></ul>"}
+  ], examples:[
+    {zh:"这个项目由王经理负责。", vi:"Dự án này do giám đốc Vương phụ trách."},
+    {zh:"他工作很负责，从来不迟到。", vi:"Anh ấy làm việc rất có trách nhiệm, chưa bao giờ đi muộn."}]},
+  {hanzi:"本来", pinyin:"běnlái", pos:"phó.", meaning:"lúc đầu, trước đây", usage:[
+    {pattern:"<span class=\"zh\">本来</span> + mệnh đề, <span class=\"zh\">但是/后来</span> + mệnh đề khác", note:"<ul><li>Diễn tả tình huống ban đầu, thường đi kèm một sự thay đổi phía sau bằng <span class=\"zh\">但是</span>, <span class=\"zh\">后来</span>...</li><li>Đứng trước chủ ngữ hoặc sau chủ ngữ đều được</li><li>VD trong bài: <span class=\"zh\">本来是小李负责的，但是他……</span></li></ul>"}
+  ], examples:[
+    {zh:"我本来打算周末去旅游，但是突然下雨了。", vi:"Lúc đầu tôi định cuối tuần đi du lịch, nhưng trời bỗng đổ mưa."},
+    {zh:"这件事本来很简单，后来变得复杂了。", vi:"Việc này lúc đầu rất đơn giản, sau đó lại trở nên phức tạp."}]},
+  {hanzi:"应聘", pinyin:"yìngpìn", pos:"đgt.", meaning:"xin việc, ứng tuyển", usage:[
+    {pattern:"A + <span class=\"zh\">应聘</span> + (O vị trí công việc)", note:"<ul><li>Là góc nhìn của người xin việc (ứng viên), ngược với <span class=\"zh\">招聘</span> (góc nhìn nhà tuyển dụng)</li><li>VD trong bài: <span class=\"zh\">这次应聘的人多吗</span></li></ul>"}
+  ], examples:[
+    {zh:"我打算应聘这家公司的销售岗位。", vi:"Tôi định ứng tuyển vị trí bán hàng ở công ty này."},
+    {zh:"这次一共有十五个人来应聘。", vi:"Lần này tổng cộng có mười lăm người đến ứng tuyển."}]},
+  {hanzi:"材料", pinyin:"cáiliào", pos:"dt.", meaning:"tư liệu, tài liệu", examples:[
+    {zh:"请把你的申请材料发给我。", vi:"Vui lòng gửi tài liệu xin việc của bạn cho tôi."},
+    {zh:"这是他们两个人的材料，您看看。", vi:"Đây là tài liệu của hai người họ, mời anh/chị xem qua."}]},
+  {hanzi:"符合", pinyin:"fúhé", pos:"đgt.", meaning:"phù hợp", usage:[
+    {pattern:"A + <span class=\"zh\">符合</span> + O (yêu cầu/tiêu chuẩn)", note:"<ul><li>A phù hợp/đáp ứng đúng O</li><li>Tân ngữ thường là <span class=\"zh\">要求</span>, <span class=\"zh\">标准</span>, <span class=\"zh\">条件</span>...</li><li>VD trong bài: <span class=\"zh\">符合我们的要求</span></li></ul>"}
+  ], examples:[
+    {zh:"他的能力很符合这份工作的要求。", vi:"Năng lực của anh ấy rất phù hợp với yêu cầu công việc này."},
+    {zh:"这两位候选人都符合面试标准。", vi:"Cả hai ứng viên này đều đáp ứng tiêu chuẩn phỏng vấn."}]},
+  {hanzi:"通知", pinyin:"tōngzhī", pos:"đgt.", meaning:"báo tin, thông báo", examples:[
+    {zh:"请通知他们下周一来面试。", vi:"Hãy báo cho họ thứ Hai tuần sau đến phỏng vấn."},
+    {zh:"学校通知我们明天放假。", vi:"Nhà trường thông báo ngày mai chúng ta được nghỉ."}]},
+  {hanzi:"律师", pinyin:"lǜshī", pos:"dt.", meaning:"luật sư", examples:[
+    {zh:"她大学毕业后当了律师。", vi:"Cô ấy tốt nghiệp đại học xong thì làm luật sư."},
+    {zh:"遇到这种问题，最好问问律师。", vi:"Gặp vấn đề kiểu này, tốt nhất nên hỏi luật sư."}]},
+  {hanzi:"专业", pinyin:"zhuānyè", pos:"dt.", meaning:"chuyên ngành", usage:[
+    {pattern:"<span class=\"zh\">学</span>/<span class=\"zh\">学的是</span> + <span class=\"zh\">专业</span>", note:"<ul><li>Chỉ ngành học ở bậc đại học/cao đẳng</li><li>Thường dùng với <span class=\"zh\">学的是……专业</span> để giới thiệu ngành mình học</li><li>VD trong bài: <span class=\"zh\">我学的就是法律专业</span></li></ul>"}
+  ], examples:[
+    {zh:"我妹妹学的是英语专业。", vi:"Em gái tôi học chuyên ngành tiếng Anh."},
+    {zh:"这个专业毕业后工作机会很多。", vi:"Chuyên ngành này tốt nghiệp xong có nhiều cơ hội việc làm."}]},
+  {hanzi:"另外", pinyin:"lìngwài", pos:"liên.", meaning:"ngoài ra", usage:[
+    {pattern:"câu 1，<span class=\"zh\">另外</span>，câu 2", note:"<ul><li>Là liên từ dùng để bổ sung thêm một ý mới bên cạnh ý đã nói</li><li>Thường đứng đầu câu/mệnh đề sau, có dấu phẩy ngay sau</li><li>VD trong bài: <span class=\"zh\">另外，收入也不错</span></li></ul>"}
+  ], examples:[
+    {zh:"这家饭馆儿的菜很好吃，另外服务也不错。", vi:"Món ăn ở quán này rất ngon, ngoài ra phục vụ cũng tốt."},
+    {zh:"你要带好护照，另外也别忘了带钱包。", vi:"Bạn nhớ mang theo hộ chiếu, ngoài ra cũng đừng quên mang ví."}]},
+  {hanzi:"收入", pinyin:"shōurù", pos:"dt.", meaning:"thu nhập", examples:[
+    {zh:"这份工作的收入不太高。", vi:"Thu nhập của công việc này không cao lắm."},
+    {zh:"他每个月的收入都拿一部分给父母。", vi:"Thu nhập hằng tháng của anh ấy đều dành một phần đưa cho bố mẹ."}]},
+  {hanzi:"咱们", pinyin:"zánmen", pos:"đt.", meaning:"chúng ta, chúng mình", usage:[
+    {pattern:"<span class=\"zh\">咱们</span> (bao gồm cả người nói lẫn người nghe)", note:"<ul><li>Là đại từ nhân xưng, luôn bao gồm cả người nghe, thường dùng trong khẩu ngữ thân mật</li><li>Khác với <span class=\"zh\">我们</span> — <span class=\"zh\">我们</span> có thể không bao gồm người nghe</li><li>VD trong bài: <span class=\"zh\">星期天咱们同学聚会</span></li></ul>"}
+  ], examples:[
+    {zh:"咱们一起去吃饭吧。", vi:"Chúng ta cùng đi ăn cơm đi."},
+    {zh:"这件事咱们俩商量一下再决定。", vi:"Việc này chúng mình bàn bạc một chút rồi hãy quyết định."}]},
+  {hanzi:"安排", pinyin:"ānpái", pos:"đgt.", meaning:"sắp xếp", usage:[
+    {pattern:"(N) + <span class=\"zh\">安排</span> + <span class=\"zh\">得</span> + tt.", note:"<ul><li>Diễn tả mức độ của việc sắp xếp, dùng bổ ngữ trình độ với <span class=\"zh\">得</span></li><li><span class=\"zh\">安排</span> cũng có thể làm danh từ: <span class=\"zh\">有什么安排</span> = có kế hoạch/dự định gì</li><li>VD trong bài: <span class=\"zh\">时间安排得很紧张</span></li></ul>"}
+  ], examples:[
+    {zh:"这次旅行的行程安排得很合理。", vi:"Lịch trình chuyến đi lần này được sắp xếp rất hợp lý."},
+    {zh:"周末你有什么安排吗？", vi:"Cuối tuần bạn có dự định gì không?"}]},
+  {hanzi:"首先", pinyin:"shǒuxiān", pos:"đt.", meaning:"trước hết, trước tiên", usage:[
+    {pattern:"<span class=\"zh\">首先</span>……，<span class=\"zh\">其次</span>……", note:"<ul><li>Cặp từ dùng để trình bày các bước/lý do theo thứ tự trước–sau, thường đứng đầu câu, có dấu phẩy ngay sau</li><li><span class=\"zh\">首先</span> có thể dùng một mình (không cần đủ cặp) khi chỉ cần nhấn mạnh điều đầu tiên</li><li>VD trong bài: <span class=\"zh\">首先，要穿正式的衣服……其次，应聘时不要紧张</span></li></ul>"}
+  ], examples:[
+    {zh:"首先，你要把材料准备好，其次，才能去面试。", vi:"Trước hết, bạn phải chuẩn bị tài liệu đầy đủ, sau đó mới có thể đi phỏng vấn."},
+    {zh:"学好一门外语，首先要多听多说。", vi:"Muốn học tốt một ngoại ngữ, trước hết phải nghe nhiều nói nhiều."}]},
+  {hanzi:"正式", pinyin:"zhèngshì", pos:"tt.", meaning:"chính thức, trang trọng", examples:[
+    {zh:"面试的时候最好穿正式的衣服。", vi:"Khi đi phỏng vấn tốt nhất nên mặc trang phục chỉnh tề."},
+    {zh:"下个月我们就正式开始上班了。", vi:"Tháng sau chúng tôi sẽ chính thức bắt đầu đi làm."}]},
+  {hanzi:"留", pinyin:"liú", pos:"đgt.", meaning:"để lại", usage:[
+    {pattern:"A + <span class=\"zh\">给</span> + B + <span class=\"zh\">留下</span> + O (ấn tượng/kỷ niệm...)", note:"<ul><li>Thường đi cùng bổ ngữ <span class=\"zh\">下</span> thành <span class=\"zh\">留下</span> = để lại (ấn tượng, kỷ niệm...)</li><li>VD trong bài: <span class=\"zh\">给面试者留下一个好的印象</span></li></ul>"}
+  ], examples:[
+    {zh:"这次旅行给我留下了很深的印象。", vi:"Chuyến đi này để lại cho tôi ấn tượng rất sâu sắc."},
+    {zh:"请把你的电话号码留给我。", vi:"Hãy để lại số điện thoại của bạn cho tôi."}]},
+  {hanzi:"其次", pinyin:"qícì", pos:"đt.", meaning:"thứ hai, sau đó", usage:[
+    {pattern:"<span class=\"zh\">首先</span>……，<span class=\"zh\">其次</span>……", note:"<ul><li>Đi cùng cặp với <span class=\"zh\">首先</span> để trình bày ý thứ hai sau khi đã nêu ý đầu tiên</li><li>VD trong bài: <span class=\"zh\">其次，应聘时不要紧张</span></li></ul>"}
+  ], examples:[
+    {zh:"首先要穿正式的衣服，其次要相信自己的能力。", vi:"Trước hết phải mặc trang phục chỉnh tề, sau đó phải tin vào năng lực của bản thân."},
+    {zh:"这份工作我很喜欢，其次收入也不错。", vi:"Công việc này tôi rất thích, hơn nữa thu nhập cũng khá tốt."}]},
+  {hanzi:"诚实", pinyin:"chéngshí", pos:"tt.", meaning:"thành thật", examples:[
+    {zh:"回答问题的时候要诚实。", vi:"Khi trả lời câu hỏi thì phải thành thật."},
+    {zh:"他是一个很诚实的人，从来不说谎。", vi:"Anh ấy là một người rất thành thật, chưa bao giờ nói dối."}]},
+  {hanzi:"改变", pinyin:"gǎibiàn", pos:"đgt.", meaning:"thay đổi", examples:[
+    {zh:"别人对你的第一印象很难改变。", vi:"Ấn tượng ban đầu của người khác về bạn rất khó thay đổi."},
+    {zh:"他决定改变自己的学习方法。", vi:"Anh ấy quyết định thay đổi phương pháp học tập của mình."}]},
+  {hanzi:"感觉", pinyin:"gǎnjué", pos:"dt.", meaning:"cảm giác, cảm nghĩ", examples:[
+    {zh:"第一印象会影响别人对你的感觉。", vi:"Ấn tượng ban đầu sẽ ảnh hưởng đến cảm giác của người khác về bạn."},
+    {zh:"我对这份工作的感觉还不错。", vi:"Cảm giác của tôi về công việc này khá tốt."}]},
+  {hanzi:"判断", pinyin:"pànduàn", pos:"đgt.", meaning:"nhận xét, đánh giá", examples:[
+    {zh:"不要只看外表就判断一个人。", vi:"Đừng chỉ nhìn vẻ ngoài mà đánh giá một người."},
+    {zh:"他的判断一般都很准确。", vi:"Nhận định của anh ấy nhìn chung đều rất chính xác."}]},
+  {hanzi:"顾客", pinyin:"gùkè", pos:"dt.", meaning:"khách hàng", examples:[
+    {zh:"给顾客留下好的印象很重要。", vi:"Để lại ấn tượng tốt cho khách hàng là điều rất quan trọng."},
+    {zh:"这家店的顾客越来越多了。", vi:"Khách hàng của cửa hàng này ngày càng nhiều."}]},
+  {hanzi:"准时", pinyin:"zhǔnshí", pos:"tt.", meaning:"đúng giờ", examples:[
+    {zh:"上班的时候一定要准时。", vi:"Khi đi làm thì nhất định phải đúng giờ."},
+    {zh:"他每次开会都准时到。", vi:"Mỗi lần họp anh ấy đều đến đúng giờ."}]},
+  {hanzi:"不管", pinyin:"bùguǎn", pos:"liên.", meaning:"bất kể, bất luận", usage:[
+    {pattern:"<span class=\"zh\">不管</span> + A，<span class=\"zh\">还是</span>/<span class=\"zh\">或者</span> + B，<span class=\"zh\">都</span> + kết quả", note:"<ul><li>Nêu điều kiện dù thế nào cũng không ảnh hưởng đến kết quả phía sau, thường đi cùng <span class=\"zh\">都</span> hoặc <span class=\"zh\">也</span> ở vế sau</li><li>Vế trước <span class=\"zh\">不管</span> thường là câu hỏi lựa chọn/nghi vấn (A hay B, có... không...)</li><li>VD trong bài: <span class=\"zh\">不管是上课、上班，还是与别人约会，准时都非常重要</span></li></ul>"}
+  ], examples:[
+    {zh:"不管你同意还是不同意，我都要试一试。", vi:"Bất kể bạn đồng ý hay không đồng ý, tôi đều sẽ thử."},
+    {zh:"不管刮风还是下雨，他都坚持跑步。", vi:"Bất kể gió hay mưa, anh ấy đều kiên trì chạy bộ."}]},
+  {hanzi:"与", pinyin:"yǔ", pos:"giới.", meaning:"với, và", usage:[
+    {pattern:"A + <span class=\"zh\">与</span> + B", note:"<ul><li>Tương đương <span class=\"zh\">和</span>/<span class=\"zh\">跟</span>, nhưng mang sắc thái trang trọng, thường dùng trong văn viết</li><li>VD trong bài: <span class=\"zh\">与别人约会</span></li></ul>"}
+  ], examples:[
+    {zh:"这件事与我没有关系。", vi:"Việc này không liên quan gì đến tôi."},
+    {zh:"他常常与同事一起吃午饭。", vi:"Anh ấy thường ăn trưa cùng đồng nghiệp."}]},
+  {hanzi:"约会", pinyin:"yuēhuì", pos:"đgt.", meaning:"hẹn gặp, hẹn hò", examples:[
+    {zh:"今天晚上我和朋友有个约会。", vi:"Tối nay tôi có hẹn gặp bạn."},
+    {zh:"与别人约会的时候，准时非常重要。", vi:"Khi hẹn gặp người khác, đúng giờ rất quan trọng."}]}
+];
+
+/* Chia vocab theo tung slide bai khoa de xac dinh nhan BK */
+var vocabByLesson = {
+  3:[0,1,2,3,4,5],
+  4:[6,7,8,9,10,11],
+  5:[12,13,14,15,16,17],
+  6:[18,19,20,21,22],
+  7:[23,24,25,26,27,28,29,30]
+};
+
+function getVocabLessonLabel(idx){
+  var slideIds = Object.keys(vocabByLesson);
+  for(var i=0;i<slideIds.length;i++){
+    var slideId = slideIds[i];
+    if(vocabByLesson[slideId].indexOf(idx) !== -1){ return 'BK'+(slideId-2); }
+  }
+  return '';
+}
+
+function renderFullVocabTable(){
+  var body = document.getElementById('vocabFullBody');
+  var html = '';
+  vocabData.forEach(function(v, idx){
+    var lessonLabel = getVocabLessonLabel(idx);
+    var lessonNum = lessonLabel.replace('BK','');
+    html += '<tr onclick="openVocabModal('+idx+')">' +
+      '<td>'+(idx+1)+'</td>' +
+      '<td class="t-hanzi zh bk'+lessonNum+'">'+v.hanzi+'</td>' +
+      '<td><em style="font-style:italic;">'+v.pinyin+'</em></td>' +
+      '<td>'+v.pos+'</td>' +
+      '<td>'+v.meaning+'</td>' +
+      '<td><span class="bk-badge bk'+lessonNum+'">'+lessonLabel+'</span></td>' +
+      '</tr>';
+  });
+  body.innerHTML = html;
+}
+renderFullVocabTable();
+
+/* ============ VOCAB MODAL + HANZI WRITER ============ */
+var hwInstances = {}, hwSpeed = {};
+
+/* ============ VOCAB IMAGE PATH (tu pinyin -> ten file khong dau) ============ */
+var TONE_MAP = {
+  'ā':'a','á':'a','ǎ':'a','à':'a',
+  'ē':'e','é':'e','ě':'e','è':'e',
+  'ī':'i','í':'i','ǐ':'i','ì':'i',
+  'ō':'o','ó':'o','ǒ':'o','ò':'o',
+  'ū':'u','ú':'u','ǔ':'u','ù':'u',
+  'ǖ':'v','ǘ':'v','ǚ':'v','ǜ':'v','ü':'v',
+  'ń':'n','ň':'n','ǹ':'n'
+};
+function slugifyPinyin(py){
+  var noTone = py.split('').map(function(ch){ return TONE_MAP[ch] || ch; }).join('');
+  return noTone.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');
+}
+function vocabImagePath(v){
+  return slugifyPinyin(v.pinyin) + '.png';
+}
+
+function openVocabModal(idx){
+  var v = vocabData[idx];
+  document.getElementById('mHanzi').textContent = v.hanzi;
+  document.getElementById('mPinyin').textContent = v.pinyin;
+  document.getElementById('mPos').textContent = v.pos;
+  document.getElementById('mMeaning').textContent = v.meaning;
+
+  var uWrap = document.getElementById('mUsageWrap');
+  var uContent = document.getElementById('mUsageContent');
+  var uBtn = document.getElementById('mUsageToggleBtn');
+  if(v.usage && v.usage.length){
+    var uHtml = v.usage.map(function(u){
+      return '<div class="modal-usage-item"><div class="usage-pattern">'+u.pattern+'</div><div class="usage-note">'+u.note+'</div></div>';
+    }).join('');
+    document.getElementById('mUsage').innerHTML = uHtml;
+    uWrap.style.display = '';
+    uContent.classList.remove('show');
+    uBtn.textContent = '⚠️ Xem cách dùng cần lưu ý';
+  } else {
+    document.getElementById('mUsage').innerHTML = '';
+    uWrap.style.display = 'none';
+  }
+
+  var exTitle = document.getElementById('mExampleTitle');
+  if(v.examples && v.examples.length){
+    var exHtml = v.examples.map(function(ex, i){
+      var hl = ex.zh.split(v.hanzi).join('<span class="hl">'+v.hanzi+'</span>');
+      return '<div class="modal-example-item"><span class="ex-num">'+(i+1)+'</span><div><span class="zh">'+hl+'</span><div class="ex-vi">'+ex.vi+'</div></div></div>';
+    }).join('');
+    document.getElementById('mExample').innerHTML = exHtml;
+    exTitle.classList.add('show');
+  } else {
+    document.getElementById('mExample').innerHTML = '';
+    exTitle.classList.remove('show');
+  }
+
+  var imgWrap = document.getElementById('mIllustrationWrap');
+  var img = document.getElementById('mIllustration');
+  imgWrap.style.display = '';
+  img.alt = 'Hình minh hoạ: ' + v.hanzi;
+  img.src = vocabImagePath(v);
+
+  var chars = v.hanzi.replace(/[^\u4e00-\u9fff]/g,'').split('');
+  var row = document.getElementById('mHwRow');
+  var html = '';
+  chars.forEach(function(ch, i){
+    var slotId = 'modalHW_'+idx+'_'+i;
+    html += '<div class="hw-block">' +
+      '<div class="writer-canvas" id="'+slotId+'"></div>' +
+      '<div class="hw-btns">' +
+        '<button onclick="initWriter(\''+slotId+'\',\''+ch+'\')">▶ Xem bút thuận</button>' +
+        '<button onclick="hwQuiz(\''+slotId+'\',\''+ch+'\')">✍️ Tự luyện viết</button>' +
+      '</div>' +
+      '<input class="hw-speed" type="range" min="0.5" max="3" step="0.25" value="1" oninput="changeSpeed(\''+slotId+'\',\''+ch+'\', this.value)">' +
+      '<div class="quiz-feedback" id="'+slotId+'-feedback"></div>' +
+      '</div>';
+  });
+  row.innerHTML = html;
+  row.classList.remove('show');
+  document.getElementById('mHwToggleBtn').textContent = '✍️ Xem bút thuận';
+
+  document.getElementById('vocabModal').classList.add('show');
+}
+function closeVocabModal(){ document.getElementById('vocabModal').classList.remove('show'); }
+function toggleHwRow(){
+  var row = document.getElementById('mHwRow');
+  var btn = document.getElementById('mHwToggleBtn');
+  var showing = row.classList.toggle('show');
+  btn.textContent = showing ? '▲ Ẩn bút thuận' : '✍️ Xem bút thuận';
+}
+function toggleUsageBlock(){
+  var content = document.getElementById('mUsageContent');
+  var btn = document.getElementById('mUsageToggleBtn');
+  var showing = content.classList.toggle('show');
+  btn.textContent = showing ? '▲ Ẩn cách dùng' : '⚠️ Xem cách dùng cần lưu ý';
+}
+function initWriter(slotId, char){
+  document.getElementById(slotId).innerHTML = '';
+  if(typeof HanziWriter === 'undefined'){
+    document.getElementById(slotId).innerHTML =
+      '<div style="padding:10px;text-align:center;color:var(--ink-soft);font-size:0.75rem;">Không tải được thư viện bút thuận (cần internet).</div>';
+    return;
+  }
+  hwInstances[slotId] = HanziWriter.create(slotId, char, {
+    width: 180, height: 180, padding: 10,
+    strokeColor: '#E8384F', radicalColor: '#E5399A', showOutline: true,
+    strokeAnimationSpeed: hwSpeed[slotId] || 1, delayBetweenStrokes: 250
+  });
+  hwInstances[slotId].animateCharacter();
+}
+function changeSpeed(slotId, char, value){
+  hwSpeed[slotId] = parseFloat(value);
+  initWriter(slotId, char);
+}
+function hwQuiz(slotId, char){
+  if(!hwInstances[slotId]){ initWriter(slotId, char); }
+  var fb = document.getElementById(slotId + '-feedback');
+  if(!hwInstances[slotId] || typeof hwInstances[slotId].quiz !== 'function'){
+    if(fb) fb.textContent = 'Không tải được thư viện bút thuận (cần internet).';
+    return;
+  }
+  if(fb) fb.textContent = '✍️ Viết từng nét theo đúng thứ tự.';
+  hwInstances[slotId].quiz({
+    onCorrectStroke: function(data){ if(fb) fb.textContent = '✅ Đúng! Còn ' + data.strokesRemaining + ' nét.'; },
+    onMistake: function(){ if(fb) fb.textContent = '❌ Chưa đúng, thử lại nét này.'; },
+    onComplete: function(data){ if(fb) fb.textContent = '🎉 Hoàn thành! Số lần sai: ' + data.totalMistakes + '.'; }
+  });
+}
+document.getElementById('vocabModal').addEventListener('click', function(e){ if(e.target===this) closeVocabModal(); });
+
+function scrollToTop(){ window.scrollTo({ top: 0, behavior: 'smooth' }); }
+window.addEventListener('scroll', function(){
+  var btn = document.getElementById('backToTopBtn');
+  if(!btn) return;
+  if(window.scrollY > 300){ btn.classList.add('show'); } else { btn.classList.remove('show'); }
+});
+
+/* ============ FULLSCREEN TOGGLE ============ */
+function toggleFullscreen(){
+  var el = document.documentElement;
+  var isFull = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  if(!isFull){
+    if(el.requestFullscreen) el.requestFullscreen();
+    else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if(el.msRequestFullscreen) el.msRequestFullscreen();
+  } else {
+    if(document.exitFullscreen) document.exitFullscreen();
+    else if(document.webkitExitFullscreen) document.webkitExitFullscreen();
+    else if(document.msExitFullscreen) document.msExitFullscreen();
+  }
+}
+function updateFullscreenIcon(){
+  var icon = document.getElementById('fullscreenIcon');
+  var btn = document.getElementById('fullscreenBtn');
+  var isFull = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  if(!icon || !btn) return;
+  icon.textContent = isFull ? '⛶' : '⛶';
+  btn.title = isFull ? 'Thoát toàn màn hình' : 'Xem toàn màn hình';
+  btn.classList.toggle('is-full', !!isFull);
+}
+document.addEventListener('fullscreenchange', updateFullscreenIcon);
+document.addEventListener('webkitfullscreenchange', updateFullscreenIcon);
+document.addEventListener('msfullscreenchange', updateFullscreenIcon);
+
+/* ============ MATCH GAME (khoi dong 1) ============ */
+var selectedWord=null, selectedImg=null, matchedCount=0;
+function selectWord(el){
+  if(el.classList.contains('matched')) return;
+  document.querySelectorAll('.match-word.selected').forEach(function(w){ w.classList.remove('selected'); });
+  el.classList.add('selected'); selectedWord=el; tryMatch();
+}
+function selectImg(el){
+  if(el.classList.contains('matched')) return;
+  document.querySelectorAll('.match-img.selected').forEach(function(w){ w.classList.remove('selected'); });
+  el.classList.add('selected'); selectedImg=el; tryMatch();
+}
+function tryMatch(){
+  if(!selectedWord||!selectedImg) return;
+  var w=selectedWord, i=selectedImg;
+  if(w.getAttribute('data-pair')===i.getAttribute('data-pair')){
+    w.classList.remove('selected'); w.classList.add('matched');
+    i.classList.remove('selected'); i.classList.add('matched');
+    matchedCount++;
+    document.getElementById('matchProgress').textContent='Đã ghép đúng: '+matchedCount+' / 6';
+  } else {
+    w.classList.add('wrong'); i.classList.add('wrong');
+    setTimeout(function(){ w.classList.remove('selected','wrong'); i.classList.remove('selected','wrong'); }, 550);
+  }
+  selectedWord=null; selectedImg=null;
+}
+function resetMatchGame(){
+  matchedCount=0; selectedWord=null; selectedImg=null;
+  document.querySelectorAll('.match-word,.match-img').forEach(function(el){ el.classList.remove('matched','selected','wrong'); });
+  document.getElementById('matchProgress').textContent='Đã ghép đúng: 0 / 6';
+}
+function togglePinyin(){
+  var grid = document.querySelector('.match-words-grid');
+  var btn = document.getElementById('pinyinToggleBtn');
+  var hidden = grid.classList.toggle('hide-pinyin');
+  btn.textContent = hidden ? '👁️ Hiện pinyin' : '🙈 Ẩn pinyin';
+}
+
+/* ============ SURVEY TABLE (khoi dong 2) ============ */
+var activeStudent = 1;
+function selectStudent(n){
+  activeStudent = n;
+  document.querySelectorAll('.student-btn').forEach(function(btn){ btn.classList.remove('active'); });
+  document.getElementById('student-btn-' + n).classList.add('active');
+}
+function toggleSurveyCell(el){
+  var key = 's' + activeStudent;
+  var dotsWrap = el.querySelector('.survey-dots');
+  var existing = dotsWrap.querySelector('.dot-' + key);
+  if(existing){
+    existing.remove();
+  } else {
+    var dot = document.createElement('span');
+    dot.className = 'survey-dot dot-' + key;
+    dot.textContent = '✓';
+    dotsWrap.appendChild(dot);
+  }
+}
+function resetSurveyTable(){
+  document.querySelectorAll('.survey-cell .survey-dots').forEach(function(w){ w.innerHTML = ''; });
+}
+
+/* ============ FLASHCARD ============ */
+var fcDeck = vocabData.slice();
+var fcIndex = 0;
+function renderFlashcard(){
+  var c = fcDeck[fcIndex];
+  document.getElementById('fcFrontHanzi').textContent = c.hanzi;
+  document.getElementById('fcBackPinyin').textContent = c.pinyin;
+  document.getElementById('fcBackPos').textContent = c.pos;
+  document.getElementById('fcBackMeaning').textContent = c.meaning;
+  document.getElementById('flashcardEl').classList.remove('flipped');
+  document.getElementById('fcCounter').textContent = 'Thẻ '+(fcIndex+1)+' / '+fcDeck.length;
+}
+function flipCard(){ document.getElementById('flashcardEl').classList.toggle('flipped'); }
+function fcNext(e){ e.stopPropagation(); fcIndex=(fcIndex+1)%fcDeck.length; renderFlashcard(); }
+function fcPrev(e){ e.stopPropagation(); fcIndex=(fcIndex-1+fcDeck.length)%fcDeck.length; renderFlashcard(); }
+function fcShuffle(e){
+  e.stopPropagation();
+  for(var i=fcDeck.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=fcDeck[i]; fcDeck[i]=fcDeck[j]; fcDeck[j]=t; }
+  fcIndex=0; renderFlashcard();
+}
+renderFlashcard();
+</script>
+</body>
+</html>
